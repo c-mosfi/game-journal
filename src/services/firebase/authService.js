@@ -5,6 +5,8 @@ import {
 	signInWithEmailAndPassword,
 	signOut,
 	updateProfile,
+	sendPasswordResetEmail,
+	deleteUser,
 } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from './firebaseConfig.js';
@@ -18,7 +20,7 @@ export const registerEmailPassword = async (email, password, displayName) => {
 			email,
 			password
 		);
-		const user = userCredential.user; 
+		const user = userCredential.user;
 
 		// 2. Update profile
 		await updateProfile(user, { displayName });
@@ -65,4 +67,19 @@ export const logout = async () => {
 // Get current user (synchronous)
 export const getCurrentUser = () => {
 	return auth.currentUser;
+};
+// TODO: Test these methods when the SettingPage is done
+// Password reset
+export const resetPassword = async (email) => {
+	await sendPasswordResetEmail(auth, email);
+};
+
+// Update user profile
+export const updateUserProfile = async (updates) => {
+	await updateProfile(auth.currentUser, updates);
+};
+
+// Delete account
+export const deleteAccount = async () => {
+	await deleteUser(auth.currentUser);
 };
