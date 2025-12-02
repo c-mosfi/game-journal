@@ -62,3 +62,6 @@ lib-cov
 
 # dataconnect generated files
 .dataconnect
+
+# Do-list:
+doList.md
