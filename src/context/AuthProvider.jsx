@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onIdTokenChanged } from 'firebase/auth';
 import { auth } from '../services/firebase/firebaseConfig.js';
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
 
 	useEffect(() => {
 		// check for changes on auth states
-		const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+		const unsubscribe = onIdTokenChanged(auth, (currentUser) => {
 			setUser(currentUser);
 			setLoading(false);
 		});
