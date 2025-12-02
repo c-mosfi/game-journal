@@ -1,10 +1,7 @@
-function App() {
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { routes } from './router/AppRoutes';
 
-	return (
-		<>
-			<h1 className="text-3xl underline">Game Journal</h1>
-		</>
-	);
-}
-
-export default App;
+export const App = () => {
+	const router = createBrowserRouter(routes);
+	return <RouterProvider router={router} />;
+};
