@@ -1,20 +1,23 @@
 import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { registerEmailPassword } from '../../services/firebase/authService';
-// TODO: check comments and add router/navigation/links
-// import { useNavigate, Link } from 'react-router-dom';
 
 export const RegisterPage = () => {
-	// const navigate = useNavigate();
+	const navigate = useNavigate();
 	const [formData, setFormData] = useState({
-		displayName: '',
+		username: '',
 		email: '',
 		password: '',
 		confirmPassword: '',
 	});
 	const [error, setError] = useState('');
 	const [loading, setLoading] = useState(false);
+	const [showPassword, setShowPassword] = useState(false);
+	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
 	const handleChange = (e) => {
+		if (error) setError('');
+
 		setFormData({
 			...formData,
 			[e.target.name]: e.target.value,
@@ -26,108 +29,206 @@ export const RegisterPage = () => {
 		setError('');
 
 		// Validation
-		if (formData.password !== formData.confirmPassword) {
-			setError('Passwords do not match');
+		const nameLength = formData.username.trim().length;
+		if (nameLength < 2 || nameLength > 12) {
+			setError(
+				`Display name must be between 2 and 12 characters. Yours has ${nameLength} characters.`
+			);
 			return;
 		}
+
 		if (formData.password.length < 6) {
 			setError('Password must be at least 6 characters');
 			return;
 		}
+
+		if (formData.password !== formData.confirmPassword) {
+			setError('Passwords do not match');
+			return;
+		}
+
 		setLoading(true);
 
 		try {
 			await registerEmailPassword(
 				formData.email,
 				formData.password,
-				formData.displayName
+				formData.username.trim()
 			);
-			// navigate('/home'); 
-		} catch (err) {
-			setError(err.message || 'Failed to register');
+			navigate('/home');
+		} catch (error) {
+			if (error.code === 'auth/email-already-in-use') {
+				setError('This email is already registered. Try logging in instead.');
+			} else if (error.code === 'auth/invalid-email') {
+				setError('Invalid email address format.');
+			} else if (error.code === 'auth/weak-password') {
+				setError('Password is too weak. Use a stronger password.');
+			} else {
+				setError(
+					error.message || 'Failed to create account. Please try again.'
+				);
+			}
 		} finally {
 			setLoading(false);
 		}
 	};
 
-	return (
-		<div className="min-h-screen flex items-center justify-center bg-gray-50">
-			<div className="max-w-md w-full bg-white p-8 rounded-lg shadow">
-				<h2 className="text-2xl font-bold mb-6 text-center">Create Account</h2>
+	// Check if form is valid
+	const isFormValid =
+		formData.username.trim() &&
+		formData.email.trim() &&
+		formData.password &&
+		formData.confirmPassword;
 
+	return (
+		<div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
+			<div className="max-w-md w-full bg-white p-8 rounded-lg shadow-lg">
+				<div className="text-center mb-8">
+					<h1 className="text-3xl font-bold text-gray-900 mb-2">
+						Create Account
+					</h1>
+					<p className="text-gray-600 text-sm">
+						Join GameJournal to track your gaming journey
+					</p>
+				</div>
+
+				{/* Error */}
 				{error && (
-					<div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-						{error}
+					<div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+						<p className="text-sm font-medium">{error}</p>
 					</div>
 				)}
 
-				<form onSubmit={handleSubmit}>
-					<div className="mb-4">
-						<label className="block text-gray-700 mb-2">Display Name</label>
+				{/* Form */}
+				<form onSubmit={handleSubmit} className="space-y-5">
+					{/* Name */}
+					<div>
+						<label
+							htmlFor="username"
+							className="block text-sm font-medium text-gray-700 mb-2">
+							Username
+						</label>
 						<input
+							id="username"
 							type="text"
-							name="displayName"
-							value={formData.displayName}
+							name="username"
+							value={formData.username}
 							onChange={handleChange}
 							required
-							className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-teal-500"
-							placeholder="Your name"
+							autoComplete="name"
+							className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
+							placeholder="Enter a name"
 						/>
 					</div>
 
-					<div className="mb-4">
-						<label className="block text-gray-700 mb-2">Email</label>
+					{/* Email */}
+					<div>
+						<label
+							htmlFor="email"
+							className="block text-sm font-medium text-gray-700 mb-2">
+							Email address
+						</label>
 						<input
+							id="email"
 							type="email"
 							name="email"
 							value={formData.email}
 							onChange={handleChange}
 							required
-							className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-teal-500"
+							autoComplete="email"
+							className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
 							placeholder="you@example.com"
 						/>
 					</div>
 
-					<div className="mb-4">
-						<label className="block text-gray-700 mb-2">Password</label>
-						<input
-							type="password"
-							name="password"
-							value={formData.password}
-							onChange={handleChange}
-							required
-							className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-teal-500"
-							placeholder="At least 6 characters"
-						/>
+					{/* Password */}
+					<div>
+						<label
+							htmlFor="password"
+							className="block text-sm font-medium text-gray-700 mb-2">
+							Password
+						</label>
+						<div className="relative">
+							<input
+								id="password"
+								type={showPassword ? 'text' : 'password'}
+								name="password"
+								value={formData.password}
+								onChange={handleChange}
+								required
+								autoComplete="new-password"
+								className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
+								placeholder="At least 6 characters"
+							/>
+							<button
+								type="button"
+								onClick={() => setShowPassword(!showPassword)}
+								className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-600 hover:text-gray-800 font-medium">
+								{showPassword ? 'Hide' : 'Show'}
+							</button>
+						</div>
+						<p className="text-xs text-gray-500 mt-1">
+							Must be at least 6 characters long
+						</p>
 					</div>
 
-					<div className="mb-6">
-						<label className="block text-gray-700 mb-2">Confirm Password</label>
-						<input
-							type="password"
-							name="confirmPassword"
-							value={formData.confirmPassword}
-							onChange={handleChange}
-							required
-							className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-teal-500"
-							placeholder="Repeat password"
-						/>
+					{/* Confirm password */}
+					<div>
+						<label
+							htmlFor="confirmPassword"
+							className="block text-sm font-medium text-gray-700 mb-2">
+							Confirm password
+						</label>
+						<div className="relative">
+							<input
+								id="confirmPassword"
+								type={showConfirmPassword ? 'text' : 'password'}
+								name="confirmPassword"
+								value={formData.confirmPassword}
+								onChange={handleChange}
+								required
+								autoComplete="new-password"
+								className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
+								placeholder="Repeat your password"
+							/>
+							<button
+								type="button"
+								onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+								className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-600 hover:text-gray-800 font-medium">
+								{showConfirmPassword ? 'Hide' : 'Show'}
+							</button>
+						</div>
 					</div>
 
+					{/* Create account btn */}
 					<button
 						type="submit"
-						disabled={loading}
-						className="w-full bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700 disabled:bg-gray-400">
+						disabled={loading || !isFormValid}
+						className="w-full bg-teal-600 text-white py-3 rounded-lg font-medium hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 disabled:bg-gray-300 disabled:cursor-not-allowed transition">
 						{loading ? 'Creating Account...' : 'Create Account'}
 					</button>
 				</form>
 
-				<p className="mt-4 text-center text-gray-600">
-					Already have an account?{' '}
-					{/* <Link to="/login" className="text-teal-600 hover:underline">
-						Log in
-					</Link> */}
-				</p>
+				{/* Divider */}
+				<div className="relative my-6">
+					<div className="absolute inset-0 flex items-center">
+						<div className="w-full border-t border-gray-300"></div>
+					</div>
+					<div className="relative flex justify-center text-sm">
+						<span className="px-2 bg-white text-gray-500">
+							Already have an account?
+						</span>
+					</div>
+				</div>
+
+				{/*Link to LoginPage */}
+				<div className="text-center">
+					<Link
+						to="/login"
+						className="inline-block w-full py-3 px-4 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 hover:border-gray-400 transition">
+						Log in instead
+					</Link>
+				</div>
 			</div>
 		</div>
 	);
