@@ -11,18 +11,18 @@ export const AuthProvider = ({ children }) => {
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		// check for changes on auth states
+		// Check for sign-in, sign-out, and token refresh events.
 		const unsubscribe = onIdTokenChanged(auth, (currentUser) => {
 			setUser(currentUser);
 			setLoading(false);
 		});
-		return unsubscribe;
+		return unsubscribe;  // Cleanup subscription on unmount
 	}, []);
 
 	const value = {
 		user,
 		loading,
-		isAuthenticated: !!user, // true if user exists
+		isAuthenticated: !!user,
 	};
 
 	return (
