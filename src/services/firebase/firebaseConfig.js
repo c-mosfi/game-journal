@@ -18,8 +18,7 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
-// TODO: Remove emulators before production deployment
-// Connect to Firestore emulator
+// Connect to Firestore emulator in development only
 if (import.meta.env.VITE_USE_EMULATOR === 'true') {
 	connectAuthEmulator(auth, 'http://localhost:9099');
 	connectFirestoreEmulator(db, '127.0.0.1', 8080);
