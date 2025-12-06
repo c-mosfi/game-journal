@@ -18,13 +18,13 @@ export const routes = [
 		element: <Layout />,
 		errorElement: <ErrorPage />,
 		children: [
+			{ path: 'browse', element: <BrowsePage /> },
 			{
 				element: <PublicRoute />,
 				children: [
 					{ index: true, element: <LandingPage /> },
 					{ path: 'login', element: <LoginPage /> },
 					{ path: 'register', element: <RegisterPage /> },
-					{ path: 'browse', element: <BrowsePage /> },
 				],
 			},
 			{
