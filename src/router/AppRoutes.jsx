@@ -6,6 +6,7 @@ import { ErrorPage } from '../pages/public/ErrorPage';
 import { RegisterPage } from '../pages/auth/RegisterPage';
 import { LoginPage } from '../pages/auth/LoginPage';
 import { BrowsePage } from '../pages/public/BrowsePage';
+import { GameDetailPage } from '../pages/public/GameDetailPage';
 import { HomePage } from '../pages/protected/HomePage';
 import { CollectionsPage } from '../pages/protected/CollectionsPage';
 import { ProfilePage } from '../pages/protected/ProfilePage';
@@ -18,7 +19,6 @@ export const routes = [
 		element: <Layout />,
 		errorElement: <ErrorPage />,
 		children: [
-			{ path: 'browse', element: <BrowsePage /> },
 			{
 				element: <PublicRoute />,
 				children: [
@@ -36,6 +36,9 @@ export const routes = [
 					{ path: 'settings', element: <SettingsPage /> },
 				],
 			},
+			// Available for both auth and non-auth users
+			{ path: 'browse', element: <BrowsePage /> },
+			{ path: 'games/:gameId', element: <GameDetailPage /> },
 		],
 	},
 ];
