@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { collectionService } from '../../services/firebase/collectionService';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -9,6 +10,8 @@ export const CollectionsPage = () => {
 	const [formData, setFormData] = useState({ name: '', description: '' });
 	const [submitting, setSubmitting] = useState(false);
 	const [error, setError] = useState(null);
+
+	const navigate = useNavigate();
 
 	const { user } = useAuth();
 	const userId = user?.uid;
@@ -128,7 +131,8 @@ export const CollectionsPage = () => {
 						{collections.map((col) => (
 							<div
 								key={col.id}
-								className="bg-white rounded-xl shadow-sm p-5 hover:shadow-md transition">
+								onClick={() => navigate(`/collections/${col.id}`)}
+								className="bg-white rounded-xl shadow-sm p-5 hover:shadow-md transition cursor-pointer">
 								<div className="flex items-start justify-between mb-3">
 									<h3 className="text-lg font-semibold text-gray-900 flex-1 pr-2">
 										{col.name}

@@ -9,11 +9,11 @@ import { BrowsePage } from '../pages/public/BrowsePage';
 import { GameDetailPage } from '../pages/public/GameDetailPage';
 import { HomePage } from '../pages/protected/HomePage';
 import { CollectionsPage } from '../pages/protected/CollectionsPage';
+import { CollectionDetailPage } from '../pages/protected/CollectionDetailPage';
 import { ProfilePage } from '../pages/protected/ProfilePage';
 import { SettingsPage } from '../pages/protected/SettingsPage';
 
 export const routes = [
-	// TODO: add paths to the rest of the pages
 	{
 		path: '/',
 		element: <Layout />,
@@ -31,9 +31,13 @@ export const routes = [
 				element: <ProtectedRoute />,
 				children: [
 					{ path: 'home', element: <HomePage /> },
-					{ path: 'collections', element: <CollectionsPage /> },
 					{ path: 'profile', element: <ProfilePage /> },
 					{ path: 'settings', element: <SettingsPage /> },
+					{ path: 'collections', element: <CollectionsPage /> },
+					{
+						path: 'collections/:collectionId',
+						element: <CollectionDetailPage />,
+					},
 				],
 			},
 			// Available for both auth and non-auth users
