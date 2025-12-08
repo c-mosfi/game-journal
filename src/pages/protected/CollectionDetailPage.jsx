@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../services/firebase/firebaseConfig';
+import { gameService } from '../../services/firebase/gameService';
 
 export const CollectionDetailPage = () => {
 	const { collectionId } = useParams();
@@ -12,39 +13,54 @@ export const CollectionDetailPage = () => {
 	const [error, setError] = useState(null);
 
 	useEffect(() => {
-		const fetchCollectionData = async () => {
-			try {
-				setLoading(true);
-				setError(null);
-
-				// Fetch collection details
-				const collectionRef = doc(db, 'collections', collectionId);
-				const collectionSnap = await getDoc(collectionRef);
-
-				if (!collectionSnap.exists()) {
-					setError('Collection not found');
-					setLoading(false);
-					return;
-				}
-
-				setCollection({
-					id: collectionSnap.id,
-					...collectionSnap.data(),
-				});
-
-				// TODO: Fetch games in this collection
-
-				setGames([]);
-			} catch (err) {
-				console.error('Error fetching collection:', err);
-				setError('Failed to load collection');
-			} finally {
-				setLoading(false);
-			}
-		};
-
 		fetchCollectionData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [collectionId]);
+
+	const fetchCollectionData = async () => {
+		try {
+			setLoading(true);
+			setError(null);
+
+			// Fetch collection details
+			const collectionRef = doc(db, 'collections', collectionId);
+			const collectionSnap = await getDoc(collectionRef);
+
+			if (!collectionSnap.exists()) {
+				setError('Collection not found');
+				setLoading(false);
+				return;
+			}
+
+			setCollection({
+				id: collectionSnap.id,
+				...collectionSnap.data(),
+			});
+
+			// Fetch games in this collection
+			const gamesData = await gameService.getGamesInCollection(collectionId);
+			setGames(gamesData);
+		} catch (err) {
+			console.error('Error fetching collection:', err);
+			setError('Failed to load collection');
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const handleRemoveGame = async (gameId) => {
+		if (!window.confirm('Remove this game from the collection?')) {
+			return;
+		}
+
+		try {
+			await gameService.removeGameFromCollection(collectionId, gameId);
+			await fetchCollectionData();
+		} catch (err) {
+			console.error('Error removing game:', err);
+			setError('Failed to remove game');
+		}
+	};
 
 	const formatDate = (timestamp) => {
 		if (!timestamp) return 'Just now';
@@ -88,6 +104,7 @@ export const CollectionDetailPage = () => {
 	return (
 		<div className="min-h-screen bg-gray-100">
 			<div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
+				{/* Header */}
 				<div className="mb-6">
 					<button
 						onClick={() => navigate('/collections')}
@@ -116,7 +133,7 @@ export const CollectionDetailPage = () => {
 					</div>
 				</div>
 
-				{/* Games list */}
+				{/* Games List */}
 				{games.length === 0 ? (
 					<div className="bg-white rounded-xl shadow-sm p-12 text-center">
 						<div className="text-gray-400 mb-4">
@@ -134,13 +151,79 @@ export const CollectionDetailPage = () => {
 						</div>
 					</div>
 				) : (
-					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
+					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
 						{games.map((game) => (
 							<div
 								key={game.id}
-								className="bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition">
-								{/* TODO: Games here */}
-								<div className="text-gray-900 font-medium">{game.name}</div>
+								className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition">
+								{/* Game Cover */}
+								{game.coverUrl && (
+									<div
+										className="h-48 bg-cover bg-center"
+										style={{ backgroundImage: `url(${game.coverUrl})` }}
+									/>
+								)}
+
+								<div className="p-4">
+									{/* Game Title */}
+									<h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+										{game.title}
+									</h3>
+
+									{/* Status Badge */}
+									<div className="mb-3">
+										<span
+											className={`inline-block px-2 py-1 text-xs font-medium rounded ${
+												game.status === 'Completed'
+													? 'bg-green-100 text-green-700'
+													: game.status === 'Playing'
+													? 'bg-blue-100 text-blue-700'
+													: game.status === 'Paused'
+													? 'bg-yellow-100 text-yellow-700'
+													: game.status === 'Dropped'
+													? 'bg-red-100 text-red-700'
+													: 'bg-gray-100 text-gray-700'
+											}`}>
+											{game.status}
+										</span>
+									</div>
+
+									{/* Rating */}
+									{game.personalRating && (
+										<div className="flex items-center gap-1 mb-3">
+											{[...Array(5)].map((_, i) => (
+												<span
+													key={i}
+													className={`text-sm ${
+														i < game.personalRating
+															? 'text-yellow-400'
+															: 'text-gray-300'
+													}`}>
+													★
+												</span>
+											))}
+										</div>
+									)}
+
+									{/* Genres */}
+									{game.genre && game.genre.length > 0 && (
+										<p className="text-xs text-gray-500 mb-3 line-clamp-1">
+											{game.genre.join(', ')}
+										</p>
+									)}
+
+									{/* Actions */}
+									<div className="flex gap-2">
+										<button
+											onClick={() => handleRemoveGame(game.id)}
+											className="flex-1 px-3 py-1.5 text-sm border border-red-200 text-red-600 rounded hover:bg-red-50 transition">
+											Remove
+										</button>
+										<button className="flex-1 px-3 py-1.5 text-sm bg-teal-500 text-white rounded hover:bg-teal-600 transition">
+											Details
+										</button>
+									</div>
+								</div>
 							</div>
 						))}
 					</div>
