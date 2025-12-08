@@ -1,14 +1,24 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { getGameDetails } from '../../services/api/rawgAPI';
+import { collectionService } from '../../services/firebase/collectionService';
+import { gameService } from '../../services/firebase/gameService';
 
 export const GameDetailPage = () => {
-	const { isAuthenticated } = useAuth();
+	const navigate = useNavigate();
+	const { isAuthenticated, user } = useAuth();
 	const { gameId } = useParams();
 	const [game, setGame] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
+
+	// Collection modal state
+	const [showCollectionModal, setShowCollectionModal] = useState(false);
+	const [collections, setCollections] = useState([]);
+	const [loadingCollections, setLoadingCollections] = useState(false);
+	const [addingToCollection, setAddingToCollection] = useState(false);
+	const [successMessage, setSuccessMessage] = useState('');
 
 	useEffect(() => {
 		const fetchGameDetails = async () => {
@@ -16,9 +26,9 @@ export const GameDetailPage = () => {
 				setLoading(true);
 				const data = await getGameDetails(gameId);
 				setGame(data);
-			} catch (err) {
+			} catch (error) {
 				setError('Failed to load game details');
-				console.error(err);
+				console.error(error);
 			} finally {
 				setLoading(false);
 			}
@@ -26,6 +36,48 @@ export const GameDetailPage = () => {
 
 		fetchGameDetails();
 	}, [gameId]);
+
+	const handleAddToCollectionClick = async () => {
+		if (!isAuthenticated || !user) {
+			return;
+		}
+
+		try {
+			setLoadingCollections(true);
+			setShowCollectionModal(true);
+			const userCollections = await collectionService.getUserCollections(
+				user.uid
+			);
+			setCollections(userCollections);
+		} catch (error) {
+			console.error('Error loading collections:', error);
+			alert('Failed to load collections');
+			setShowCollectionModal(false);
+		} finally {
+			setLoadingCollections(false);
+		}
+	};
+
+	const handleSelectCollection = async (collectionId) => {
+		try {
+			setAddingToCollection(true);
+			await gameService.addGameToCollection(collectionId, game);
+			setSuccessMessage('Game added to collection!');
+			setTimeout(() => {
+				setSuccessMessage('');
+				setShowCollectionModal(false);
+			}, 1500);
+		} catch (error) {
+			if (error.message === 'Game already exists in this collection') {
+				alert('This game is already in that collection');
+			} else {
+				console.error('Error adding game to collection:', error);
+				alert('Failed to add game to collection');
+			}
+		} finally {
+			setAddingToCollection(false);
+		}
+	};
 
 	if (loading) {
 		return (
@@ -142,7 +194,9 @@ export const GameDetailPage = () => {
 						{/* Add to Collection btn */}
 						<div className="pt-6 border-t">
 							{isAuthenticated ? (
-								<button className="w-full sm:w-auto px-6 py-3 bg-teal-500 text-white font-medium rounded-lg hover:bg-teal-600 transition">
+								<button
+									onClick={handleAddToCollectionClick}
+									className="w-full sm:w-auto px-6 py-3 bg-teal-500 text-white font-medium rounded-lg hover:bg-teal-600 transition">
 									Add to Collection
 								</button>
 							) : (
@@ -161,6 +215,73 @@ export const GameDetailPage = () => {
 					</div>
 				</div>
 			</div>
+
+			{/* Modal to select collection */}
+			{showCollectionModal && (
+				<div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+					<div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
+						<div className="flex items-center justify-between mb-4">
+							<h2 className="text-xl font-bold text-gray-900">
+								Add to Collection
+							</h2>
+							<button
+								onClick={() => setShowCollectionModal(false)}
+								disabled={addingToCollection}
+								className="text-gray-400 hover:text-gray-600 text-2xl leading-none disabled:opacity-50">
+								×
+							</button>
+						</div>
+
+						{successMessage && (
+							<div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg text-green-700 text-center">
+								{successMessage}
+							</div>
+						)}
+
+						{loadingCollections ? (
+							<div className="py-8 text-center text-gray-500">
+								Loading collections...
+							</div>
+						) : collections.length === 0 ? (
+							<div className="py-8 text-center">
+								<p className="text-gray-500 mb-4">No collections yet</p>
+								<button
+									onClick={() => navigate('/collections')}
+									className="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition">
+									Create Collection
+								</button>
+							</div>
+						) : (
+							<div className="space-y-2 max-h-96 overflow-y-auto">
+								{collections.map((collection) => (
+									<button
+										key={collection.id}
+										onClick={() => handleSelectCollection(collection.id)}
+										disabled={addingToCollection}
+										className="w-full text-left p-4 border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-teal-500 transition disabled:opacity-50 disabled:cursor-not-allowed">
+										<div className="font-medium text-gray-900">
+											{collection.name}
+										</div>
+										{collection.description && (
+											<div className="text-sm text-gray-500 mt-1">
+												{collection.description}
+											</div>
+										)}
+									</button>
+								))}
+							</div>
+						)}
+
+						<div className="mt-4 pt-4 border-t">
+							<button
+								onClick={() => navigate('/collections')}
+								className="text-sm text-teal-600 hover:text-teal-700 font-medium">
+								+ Create New Collection
+							</button>
+						</div>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 };
