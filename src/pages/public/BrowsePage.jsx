@@ -120,8 +120,10 @@ export const BrowsePage = () => {
 
 	return (
 		<div className="min-h-screen bg-gray-100">
-			<div className="p-4 sm:p-6">
-				<h1 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">Browse Games</h1>
+			<div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
+				<h1 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">
+					Browse Games
+				</h1>
 
 				{/* Search bar*/}
 				<div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4 sm:mb-6">
@@ -156,7 +158,8 @@ export const BrowsePage = () => {
 
 				<div className="flex gap-6">
 					{/* Filters */}
-					<aside className={`
+					<aside
+						className={`
 						fixed lg:static inset-0 lg:inset-auto z-50 lg:z-auto
 						w-full sm:w-80 lg:w-60 
 						bg-white lg:rounded-xl lg:shadow 
@@ -166,7 +169,9 @@ export const BrowsePage = () => {
 						overflow-y-auto
 					`}>
 						<div className="flex items-center justify-between mb-4 lg:block">
-							<h2 className="font-medium text-lg lg:text-base">Select Filters</h2>
+							<h2 className="font-medium text-lg lg:text-base">
+								Select Filters
+							</h2>
 							<button
 								onClick={() => setShowFilters(false)}
 								className="lg:hidden p-2 hover:bg-gray-100 rounded-lg text-gray-600 text-xl leading-none">
@@ -178,7 +183,9 @@ export const BrowsePage = () => {
 						<h3 className="font-semibold mb-2 text-sm">Genre</h3>
 						<div className="flex flex-col gap-1.5 mb-4 max-h-60 overflow-y-auto">
 							{GENRES.map((g) => (
-								<label key={g.id} className="flex items-center gap-2 text-sm cursor-pointer hover:bg-gray-50 p-1 rounded">
+								<label
+									key={g.id}
+									className="flex items-center gap-2 text-sm cursor-pointer hover:bg-gray-50 p-1 rounded">
 									<input
 										type="checkbox"
 										checked={selectedGenres.includes(g.id)}
@@ -194,7 +201,9 @@ export const BrowsePage = () => {
 						<h3 className="font-semibold mb-2 text-sm">Platform</h3>
 						<div className="flex flex-col gap-1.5 mb-4 max-h-60 overflow-y-auto">
 							{PLATFORMS.map((p) => (
-								<label key={p.id} className="flex items-center gap-2 text-sm cursor-pointer hover:bg-gray-50 p-1 rounded">
+								<label
+									key={p.id}
+									className="flex items-center gap-2 text-sm cursor-pointer hover:bg-gray-50 p-1 rounded">
 									<input
 										type="checkbox"
 										checked={selectedPlatforms.includes(p.id)}
