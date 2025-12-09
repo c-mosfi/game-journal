@@ -30,7 +30,7 @@ export const Footer = () => {
 				<div className="text-center text-sm text-gray-500 mb-2">
 					Powered by{' '}
 					<a
-						className="text-emerald-600 font-bold hover:underline"
+						className="text-teal-600 font-bold hover:underline"
 						target="_blank"
 						rel="noopener noreferrer"
 						href="https://rawg.io/apidocs">
