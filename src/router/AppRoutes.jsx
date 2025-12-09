@@ -11,8 +11,7 @@ import { BrowsePage } from '../pages/public/BrowsePage';
 import { GameDetailPage } from '../pages/public/GameDetailPage';
 import { CollectionsPage } from '../pages/protected/CollectionsPage';
 import { CollectionDetailPage } from '../pages/protected/CollectionDetailPage';
-import { ProfilePage } from '../pages/protected/ProfilePage';
-import { SettingsPage } from '../pages/protected/SettingsPage';
+import { GameInCollectionPage } from '../pages/protected/GameInCollectionPage';
 
 export const routes = [
 	{
@@ -42,6 +41,10 @@ export const routes = [
 					{
 						path: 'collections/:collectionId',
 						element: <CollectionDetailPage />,
+					},
+					{
+						path: 'collections/:collectionId/games/:gameId',
+						element: <GameInCollectionPage />,
 					},
 				],
 			},
