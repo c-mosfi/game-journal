@@ -11,9 +11,10 @@ export const Navbar = () => {
 	const handleLogout = async () => {
 		try {
 			await logout();
-			navigate('/login');
+			navigate('/');
 		} catch (error) {
-			console.error('Logout failed:', error);
+			console.error('Error logging out:', error);
+			alert('Failed to logout');
 		}
 	};
 
@@ -39,21 +40,19 @@ export const Navbar = () => {
 					{isAuthenticated ? (
 						<>
 							<Link
-								to="/home"
+								to="/"
 								className="px-3 py-2 text-teal-700 font-medium rounded-md hover:bg-gray-100 transition">
 								Home
 							</Link>
-
-							<Link
-								to="/collections"
-								className="px-3 py-2 text-teal-700 font-medium rounded-md hover:bg-gray-100 transition">
-								Collections
-							</Link>
-
 							<Link
 								to="/browse"
 								className="px-3 py-2 text-teal-700 font-medium rounded-md hover:bg-gray-100 transition">
 								Browse
+							</Link>
+							<Link
+								to="/collections"
+								className="px-3 py-2 text-teal-700 font-medium rounded-md hover:bg-gray-100 transition">
+								Collections
 							</Link>
 
 							<Link
@@ -64,8 +63,20 @@ export const Navbar = () => {
 
 							<button
 								onClick={handleLogout}
-								className="px-3 py-2 text-gray-700 font-medium rounded-md hover:bg-gray-100 transition">
+								className="cursor-pointer flex items-center justify-center gap-2 px-3 py-2 text-gray-700 bg-gray-100 font-medium rounded-md hover:bg-gray-200 transition">
 								Logout
+								<svg
+									className="w-5 h-5"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24">
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth={2}
+										d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+									/>
+								</svg>
 							</button>
 						</>
 					) : (
@@ -93,7 +104,7 @@ export const Navbar = () => {
 						{isAuthenticated ? (
 							<>
 								<Link
-									to="/home"
+									to="/"
 									className="px-3 py-2 text-teal-700 font-medium rounded-md hover:bg-gray-100 transition"
 									onClick={() => setMenuOpen(false)}>
 									Home
@@ -125,8 +136,20 @@ export const Navbar = () => {
 										setMenuOpen(false);
 										handleLogout();
 									}}
-									className="px-3 py-2 text-gray-700 font-medium rounded-md hover:bg-gray-100 transition text-left">
+									className="cursor-pointer flex items-center justify-center gap-2 px-3 py-2 text-gray-700 bg-gray-100 font-medium rounded-md hover:bg-gray-200 transition text-left">
 									Logout
+									<svg
+										className="w-5 h-5"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24">
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											strokeWidth={2}
+											d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+										/>
+									</svg>
 								</button>
 							</>
 						) : (
