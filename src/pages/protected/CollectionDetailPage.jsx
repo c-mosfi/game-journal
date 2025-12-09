@@ -109,7 +109,7 @@ export const CollectionDetailPage = () => {
 					<button
 						onClick={() => navigate('/collections')}
 						className="text-teal-600 hover:text-teal-700 font-medium mb-4 inline-flex items-center">
-						Back to Collections
+						← Back to Collections
 					</button>
 
 					<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
