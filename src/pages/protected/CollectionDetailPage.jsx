@@ -219,9 +219,12 @@ export const CollectionDetailPage = () => {
 											className="flex-1 px-3 py-1.5 text-sm border border-red-200 text-red-600 rounded hover:bg-red-50 transition">
 											Remove
 										</button>
-										<button className="flex-1 px-3 py-1.5 text-sm bg-teal-500 text-white rounded hover:bg-teal-600 transition">
+
+										<Link
+											to={`/collections/${collectionId}/games/${game.id}`}
+											className="flex-1 px-3 py-1.5 text-sm bg-teal-500 text-white rounded hover:bg-teal-600 transition text-center">
 											Details
-										</button>
+										</Link>
 									</div>
 								</div>
 							</div>
