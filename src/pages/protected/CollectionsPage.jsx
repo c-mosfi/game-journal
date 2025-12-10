@@ -66,6 +66,7 @@ export const CollectionsPage = () => {
 
 	const handleDeleteCollection = async (collectionId) => {
 		if (!window.confirm('Are you sure you want to delete this collection?')) {
+			navigate('/collections');
 			return;
 		}
 
@@ -131,29 +132,37 @@ export const CollectionsPage = () => {
 						{collections.map((col) => (
 							<div
 								key={col.id}
-								onClick={() => navigate(`/collections/${col.id}`)}
-								className="bg-white rounded-xl shadow-sm p-5 hover:shadow-md transition cursor-pointer">
-								<div className="flex items-start justify-between mb-3">
-									<h3 className="text-lg font-semibold text-gray-900 flex-1 pr-2">
-										{col.name}
-									</h3>
-									<button
-										onClick={() => handleDeleteCollection(col.id)}
-										className="text-gray-400 hover:text-red-500 transition p-1 text-xl leading-none"
-										title="Delete collection">
-										×
-									</button>
+								className="relative bg-white rounded-xl shadow-sm p-5 hover:shadow-md transition">
+								{/* Card body */}
+								<div
+									onClick={() => navigate(`/collections/${col.id}`)}
+									className="cursor-pointer">
+									<div className="flex items-start justify-between mb-3">
+										<h3 className="text-lg font-semibold text-gray-900 flex-1 pr-2 whitespace-pre-line wrap-break-word line-clamp-3">
+											{col.name}
+										</h3>
+									</div>
+
+									{col.description && (
+										<p className="text-gray-600 text-sm mb-3 whitespace-pre-line wrap-break-word line-clamp-3">
+											{col.description}
+										</p>
+									)}
+
+									<div className="text-xs text-gray-400">
+										Created {formatDate(col.createdAt)}
+									</div>
 								</div>
 
-								{col.description && (
-									<p className="text-gray-600 text-sm mb-3 line-clamp-2">
-										{col.description}
-									</p>
-								)}
-
-								<div className="text-xs text-gray-400">
-									Created {formatDate(col.createdAt)}
-								</div>
+								{/* Delete btn */}
+								<button
+									onClick={() => {
+										handleDeleteCollection(col.id);
+									}}
+									className="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition p-1 text-lg"
+									title="Delete collection">
+									×
+								</button>
 							</div>
 						))}
 					</div>
@@ -162,6 +171,7 @@ export const CollectionsPage = () => {
 
 			{/* Modal */}
 			{showModal && (
+				// TODO: Make this a component.
 				<div className="fixed inset-0 bg-gray-100 z-50 flex items-center justify-center p-4">
 					<div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
 						<div className="flex items-center justify-between mb-4">
