@@ -5,6 +5,7 @@ import { collectionService } from '../../services/firebase/collectionService';
 import { gameService } from '../../services/firebase/gameService';
 import { journalService } from '../../services/firebase/journalService';
 import { logout } from '../../services/firebase/authService';
+import { Stats } from '../../components/profile/Stats';
 
 export const ProfilePage = () => {
 	const navigate = useNavigate();
@@ -141,39 +142,7 @@ export const ProfilePage = () => {
 					</div>
 
 					{/* Stats */}
-					{/* TODO: Make Stats a component to use in LandingPage for auth users */}
-					<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-						{/* Favorite genres */}
-						<div className=" bg-gray-50 rounded-lg p-4 text-center">
-							<div className="text-4xl mb-2">🎯</div>
-							<div className="h-10  font-bold text-gray-900">
-								{loading
-									? '...'
-									: stats.favoriteGenres.length > 0
-									? stats.favoriteGenres.join(', ')
-									: 'None yet'}
-							</div>
-							<div className="text-sm text-gray-600">Favorite Genres</div>
-						</div>
-
-						{/* Total hours on current year */}
-						<div className=" bg-gray-50 rounded-lg p-4 text-center">
-							<div className="text-4xl mb-2">⏱️</div>
-							<div className="h-10 text-2xl font-bold text-gray-900">
-								{loading ? '...' : stats.totalHoursThisYear}
-							</div>
-							<div className="text-sm text-gray-600">Hours This Year</div>
-						</div>
-
-						{/* Total journal entries */}
-						<div className=" bg-gray-50 rounded-lg p-4 text-center">
-							<div className="text-4xl mb-2">📝</div>
-							<div className="h-10 text-2xl font-bold text-gray-900">
-								{loading ? '...' : stats.journalEntries}
-							</div>
-							<div className="text-sm text-gray-600">Total Entries</div>
-						</div>
-					</div>
+					<Stats loading={loading} stats={stats} role="region" aria-label="user stats" />
 				</div>
 
 				{/* Links */}
