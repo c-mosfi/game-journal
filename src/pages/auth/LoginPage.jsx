@@ -28,7 +28,7 @@ export const LoginPage = () => {
 
 		try {
 			await loginEmailPassword(formData.email, formData.password);
-			navigate('/home');
+			navigate('/');
 		} catch (error) {
 			if (
 				error.code === 'auth/invalid-credential' ||

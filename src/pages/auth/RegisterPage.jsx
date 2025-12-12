@@ -55,7 +55,7 @@ export const RegisterPage = () => {
 				formData.password,
 				formData.username.trim()
 			);
-			navigate('/home');
+			navigate('/');
 		} catch (error) {
 			if (error.code === 'auth/email-already-in-use') {
 				setError('This email is already registered. Try logging in instead.');
