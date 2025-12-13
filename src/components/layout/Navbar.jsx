@@ -19,7 +19,7 @@ export const Navbar = () => {
 	};
 
 	return (
-		<nav className="bg-white shadow-sm">
+		<nav className="bg-white shadow-sm" aria-label="Main navigation">
 			<div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
 				{/* Logo / App name */}
 				<Link
@@ -31,6 +31,9 @@ export const Navbar = () => {
 				{/* Mobile menu btn */}
 				<button
 					onClick={() => setMenuOpen(!menuOpen)}
+					aria-expanded={menuOpen}
+					aria-controls="mobile-menu"
+					aria-label="Toggle navigation menu"
 					className="text-sm font-medium text-teal-700 hover:text-gray-900 focus:outline-none block md:hidden">
 					{menuOpen ? 'Close' : 'Menu'}
 				</button>
@@ -69,7 +72,8 @@ export const Navbar = () => {
 									className="w-5 h-5"
 									fill="none"
 									stroke="currentColor"
-									viewBox="0 0 24 24">
+									viewBox="0 0 24 24"
+									aria-hidden="true">
 									<path
 										strokeLinecap="round"
 										strokeLinejoin="round"
@@ -99,8 +103,12 @@ export const Navbar = () => {
 
 			{/* Mobile menu */}
 			{menuOpen && (
-				<div className="md:hidden border-t bg-white shadow-inner">
-					<div className="flex flex-col px-4 py-4 space-y-3">
+				<div
+					id="mobile-menu"
+					className="md:hidden border-t bg-white shadow-inner">
+					<nav
+						className="flex flex-col px-4 py-4 space-y-3"
+						aria-label="Mobile navigation">
 						{isAuthenticated ? (
 							<>
 								<Link
@@ -142,7 +150,8 @@ export const Navbar = () => {
 										className="w-5 h-5"
 										fill="none"
 										stroke="currentColor"
-										viewBox="0 0 24 24">
+										viewBox="0 0 24 24"
+										aria-hidden="true">
 										<path
 											strokeLinecap="round"
 											strokeLinejoin="round"
@@ -169,7 +178,7 @@ export const Navbar = () => {
 								</Link>
 							</>
 						)}
-					</div>
+					</nav>
 				</div>
 			)}
 		</nav>

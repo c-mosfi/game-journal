@@ -1,53 +1,50 @@
 export const Stats = ({ loading, stats }) => {
 	return (
-		<div>
+		<section aria-label="User statistics">
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
 				{/* Favorite genres */}
-				<div
-					className="bg-gray-50 rounded-lg p-4 text-center"
-					role="region"
-					aria-label="Most played genres">
-					<div className="text-4xl mb-2">🎯</div>
+				<article className="bg-gray-50 rounded-lg p-4 text-center">
+					<div className="text-4xl mb-2" aria-hidden="true">
+						🎯
+					</div>
 
-					<div className="h-10 font-bold text-gray-900">
+					<p className="h-10 font-bold text-gray-900">
 						{loading
 							? '...'
 							: stats.favoriteGenres.length > 0
 							? stats.favoriteGenres.join(', ')
 							: 'None yet'}
-					</div>
+					</p>
 
-					<div className="text-sm text-gray-600">Most Played Genres</div>
-				</div>
+					<p className="text-sm text-gray-600">Most Played Genres</p>
+				</article>
 
 				{/* Total hours this year */}
-				<div
-					className="bg-gray-50 rounded-lg p-4 text-center"
-					role="region"
-					aria-label="Hours this year">
-					<div className="text-4xl mb-2">⏱️</div>
-
-					<div className="h-10 text-2xl font-bold text-gray-900">
-						{loading ? '...' : stats.totalHoursThisYear}
+				<article className="bg-gray-50 rounded-lg p-4 text-center">
+					<div className="text-4xl mb-2" aria-hidden="true">
+						⏱️
 					</div>
 
-					<div className="text-sm text-gray-600">Hours This Year</div>
-				</div>
+					<p className="h-10 text-2xl font-bold text-gray-900">
+						{loading ? '...' : stats.totalHoursThisYear}
+					</p>
+
+					<p className="text-sm text-gray-600">Hours This Year</p>
+				</article>
 
 				{/* Total journal entries */}
-				<div
-					className="bg-gray-50 rounded-lg p-4 text-center"
-					role="region"
-					aria-label="Total journal entries">
-					<div className="text-4xl mb-2">📝</div>
-
-					<div className="h-10 text-2xl font-bold text-gray-900">
-						{loading ? '...' : stats.journalEntries}
+				<article className="bg-gray-50 rounded-lg p-4 text-center">
+					<div className="text-4xl mb-2" aria-hidden="true">
+						📝
 					</div>
 
-					<div className="text-sm text-gray-600">Total Entries</div>
-				</div>
+					<p className="h-10 text-2xl font-bold text-gray-900">
+						{loading ? '...' : stats.journalEntries}
+					</p>
+
+					<p className="text-sm text-gray-600">Total Entries</p>
+				</article>
 			</div>
-		</div>
+		</section>
 	);
 };

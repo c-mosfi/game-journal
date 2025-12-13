@@ -120,15 +120,19 @@ export const BrowsePage = () => {
 
 	return (
 		<div className="min-h-screen bg-gray-100">
-			<div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
+			<main className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
 				<h1 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">
 					Browse Games
 				</h1>
 
 				{/* Search bar*/}
-				<div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4 sm:mb-6">
+				<search className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4 sm:mb-6">
+					<label htmlFor="search-input" className="sr-only">
+						Search games by title
+					</label>
 					<input
-						type="text"
+						id="search-input"
+						type="search"
 						placeholder="Search games by title..."
 						className="flex-1 px-4 py-2.5 sm:py-2 border rounded-lg bg-white text-base"
 						value={query}
@@ -138,10 +142,14 @@ export const BrowsePage = () => {
 					<div className="flex gap-3">
 						<button
 							onClick={() => setShowFilters(!showFilters)}
-							className="lg:hidden flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 bg-white border rounded-lg hover:bg-gray-50 transition relative">
+							aria-expanded={showFilters}
+							aria-controls="filters-panel"
+							className="cursor-pointer lg:hidden flex items-center justify-center gap-2 px-4 py-2.5 sm:py-2 bg-white border rounded-lg hover:bg-gray-50 transition relative">
 							<span className="text-sm">Filters</span>
 							{activeFilterCount > 0 && (
-								<span className="absolute -top-1 -right-1 bg-teal-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium">
+								<span
+									className="absolute -top-1 -right-1 bg-teal-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-medium"
+									aria-label={`${activeFilterCount} filters active`}>
 									{activeFilterCount}
 								</span>
 							)}
@@ -150,15 +158,19 @@ export const BrowsePage = () => {
 						<button
 							onClick={handleSearch}
 							disabled={loading}
-							className="flex-1 sm:flex-none px-6 py-2.5 sm:py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition text-base">
+							aria-busy={loading}
+							className="cursor-pointer flex-1 sm:flex-none px-6 py-2.5 sm:py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition text-base">
 							{loading ? 'Searching...' : 'Search'}
 						</button>
 					</div>
-				</div>
+				</search>
 
 				<div className="flex gap-6">
 					{/* Filters */}
 					<aside
+						id="filters-panel"
+						role="region"
+						aria-label="Search filters"
 						className={`
 						fixed lg:static inset-0 lg:inset-auto z-50 lg:z-auto
 						w-full sm:w-80 lg:w-60 
@@ -174,56 +186,61 @@ export const BrowsePage = () => {
 							</h2>
 							<button
 								onClick={() => setShowFilters(false)}
-								className="lg:hidden p-2 hover:bg-gray-100 rounded-lg text-gray-600 text-xl leading-none">
+								aria-label="Close filters"
+								className="cursor-pointer lg:hidden p-2 hover:bg-gray-100 rounded-lg text-gray-600 text-xl leading-none">
 								×
 							</button>
 						</div>
 
 						{/* Genres */}
-						<h3 className="font-semibold mb-2 text-sm">Genre</h3>
-						<div className="flex flex-col gap-1.5 mb-4 max-h-60 overflow-y-auto">
-							{GENRES.map((g) => (
-								<label
-									key={g.id}
-									className="flex items-center gap-2 text-sm cursor-pointer hover:bg-gray-50 p-1 rounded">
-									<input
-										type="checkbox"
-										checked={selectedGenres.includes(g.id)}
-										onChange={() => toggleGenre(g.id)}
-										className="w-4 h-4"
-									/>
-									{g.name}
-								</label>
-							))}
-						</div>
+						<fieldset>
+							<legend className="font-semibold mb-2 text-sm">Genre</legend>
+							<div className="flex flex-col gap-1.5 mb-4 max-h-60 overflow-y-auto">
+								{GENRES.map((g) => (
+									<label
+										key={g.id}
+										className="flex items-center gap-2 text-sm cursor-pointer hover:bg-gray-50 p-1 rounded">
+										<input
+											type="checkbox"
+											checked={selectedGenres.includes(g.id)}
+											onChange={() => toggleGenre(g.id)}
+											className="w-4 h-4"
+										/>
+										{g.name}
+									</label>
+								))}
+							</div>
+						</fieldset>
 
 						{/* Platforms */}
-						<h3 className="font-semibold mb-2 text-sm">Platform</h3>
-						<div className="flex flex-col gap-1.5 mb-4 max-h-60 overflow-y-auto">
-							{PLATFORMS.map((p) => (
-								<label
-									key={p.id}
-									className="flex items-center gap-2 text-sm cursor-pointer hover:bg-gray-50 p-1 rounded">
-									<input
-										type="checkbox"
-										checked={selectedPlatforms.includes(p.id)}
-										onChange={() => togglePlatform(p.id)}
-										className="w-4 h-4"
-									/>
-									{p.name}
-								</label>
-							))}
-						</div>
+						<fieldset>
+							<legend className="font-semibold mb-2 text-sm">Platform</legend>
+							<div className="flex flex-col gap-1.5 mb-4 max-h-60 overflow-y-auto">
+								{PLATFORMS.map((p) => (
+									<label
+										key={p.id}
+										className="flex items-center gap-2 text-sm cursor-pointer hover:bg-gray-50 p-1 rounded">
+										<input
+											type="checkbox"
+											checked={selectedPlatforms.includes(p.id)}
+											onChange={() => togglePlatform(p.id)}
+											className="w-4 h-4"
+										/>
+										{p.name}
+									</label>
+								))}
+							</div>
+						</fieldset>
 
 						<div className="flex flex-col gap-2">
 							<button
 								onClick={clearFilters}
-								className="text-sm bg-gray-200 px-3 py-2 rounded-lg hover:bg-gray-300 w-full transition">
+								className="cursor-pointer text-sm bg-gray-200 px-3 py-2 rounded-lg hover:bg-gray-300 w-full transition">
 								Clear Filters
 							</button>
 							<button
 								onClick={handleSearch}
-								className="lg:hidden text-sm bg-teal-500 text-white px-3 py-2 rounded-lg hover:bg-teal-600 w-full transition">
+								className="cursor-pointer lg:hidden text-sm bg-teal-500 text-white px-3 py-2 rounded-lg hover:bg-teal-600 w-full transition">
 								Apply Filters
 							</button>
 						</div>
@@ -233,31 +250,32 @@ export const BrowsePage = () => {
 						<div
 							className="lg:hidden fixed inset-0 bg-gray-100 bg-opacity-50 z-40"
 							onClick={() => setShowFilters(false)}
+							aria-hidden="true"
 						/>
 					)}
 
 					{/* Grid */}
-					<div className="flex-1 min-w-0">
+					<section className="flex-1 min-w-0" aria-label="Search results">
 						<GameGrid games={games} loading={loading} />
 
 						{hasMore && !loading && games.length > 0 && (
 							<div className="text-center mt-6">
 								<button
 									onClick={handleLoadMore}
-									className="px-6 py-2.5 bg-gray-200 rounded-lg hover:bg-gray-300 transition text-base">
+									className="cursor-pointer px-6 py-2.5 bg-gray-200 rounded-lg hover:bg-gray-300 transition text-base">
 									Load More
 								</button>
 							</div>
 						)}
 
 						{!loading && games.length === 0 && (
-							<div className="text-center text-gray-400 py-16 px-4 text-base">
+							<p className="text-center text-gray-400 py-16 px-4 text-base">
 								Click "Search" to find games
-							</div>
+							</p>
 						)}
-					</div>
+					</section>
 				</div>
-			</div>
+			</main>
 		</div>
 	);
 };

@@ -51,25 +51,30 @@ export const LoginPage = () => {
 
 	return (
 		<div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
-			<div className="max-w-md w-full bg-white p-8 rounded-lg shadow-lg">
-				<div className="text-center mb-8">
+			<main className="max-w-md w-full bg-white p-8 rounded-lg shadow-lg">
+				<header className="text-center mb-8">
 					<h1 className="text-3xl font-bold text-gray-900 mb-2">
 						Welcome Back
 					</h1>
 					<p className="text-gray-600 text-sm">
 						Sign in to continue to GameJournal
 					</p>
-				</div>
+				</header>
 
 				{/* Error */}
 				{error && (
-					<div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+					<div
+						role="alert"
+						className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
 						<p className="text-sm font-medium">{error}</p>
 					</div>
 				)}
 
 				{/* Form */}
-				<form onSubmit={handleSubmit} className="space-y-5">
+				<form
+					onSubmit={handleSubmit}
+					className="space-y-5"
+					aria-label="Login form">
 					{/* Email */}
 					<div>
 						<label
@@ -85,6 +90,7 @@ export const LoginPage = () => {
 							onChange={handleChange}
 							required
 							autoComplete="email"
+							aria-required="true"
 							className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
 							placeholder="you@example.com"
 						/>
@@ -108,13 +114,16 @@ export const LoginPage = () => {
 								onChange={handleChange}
 								required
 								autoComplete="current-password"
+								aria-required="true"
 								className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
 								placeholder="Enter your password"
 							/>
 							<button
 								type="button"
 								onClick={() => setShowPassword(!showPassword)}
-								className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-600 hover:text-gray-800 font-medium">
+								aria-label={showPassword ? 'Hide password' : 'Show password'}
+								aria-pressed={showPassword}
+								className="cursor-pointer absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-600 hover:text-gray-800 font-medium">
 								{showPassword ? 'Hide' : 'Show'}
 							</button>
 						</div>
@@ -124,13 +133,14 @@ export const LoginPage = () => {
 					<button
 						type="submit"
 						disabled={loading || !formData.email || !formData.password}
-						className="w-full bg-teal-600 text-white py-3 rounded-lg font-medium hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 disabled:bg-gray-300 disabled:cursor-not-allowed transition">
+						aria-busy={loading}
+						className="cursor-pointer w-full bg-teal-600 text-white py-3 rounded-lg font-medium hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 disabled:bg-gray-300 disabled:cursor-not-allowed transition">
 						{loading ? 'Logging in...' : 'Log In'}
 					</button>
 				</form>
 
 				{/* Divider */}
-				<div className="relative my-6">
+				<div className="relative my-6" aria-hidden="true">
 					<div className="absolute inset-0 flex items-center">
 						<div className="w-full border-t border-gray-300"></div>
 					</div>
@@ -149,7 +159,7 @@ export const LoginPage = () => {
 						Create an account
 					</Link>
 				</div>
-			</div>
+			</main>
 		</div>
 	);
 };

@@ -115,45 +115,56 @@ export const ProfilePage = () => {
 	if (!user) {
 		return (
 			<div className="min-h-screen bg-gray-100 flex items-center justify-center">
-				<div className="text-gray-500">Loading profile...</div>
+				<p className="text-gray-500">Loading profile...</p>
 			</div>
 		);
 	}
 
 	return (
 		<div className="min-h-screen bg-gray-100">
-			<div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
+			<main className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
 				{/* Profile card */}
 				<div className="bg-white rounded-xl shadow-sm p-8 mb-6">
-					<div className="flex flex-col items-center mb-8">
+					<header className="flex flex-col items-center mb-8">
 						{/* Avatar and info */}
-						<div className="w-24 h-24 rounded-full bg-teal-100 flex items-center justify-center mb-4">
+						<div
+							className="w-24 h-24 rounded-full bg-teal-100 flex items-center justify-center mb-4"
+							aria-hidden="true">
 							<span className="text-3xl font-semibold text-teal-600">
 								{getInitials(user.displayName)}
 							</span>
 						</div>
-						<h2 className="text-xl font-semibold text-gray-900 mb-1">
+						<h1 className="text-xl font-semibold text-gray-900 mb-1">
 							{user.displayName}
-						</h2>
+						</h1>
 						<p className="text-gray-600 mb-2">{user.email}</p>
 						<p className="text-sm text-gray-500">
 							Member since {formatDate(user.metadata?.creationTime)}
 						</p>
-					</div>
+					</header>
 
 					{/* Stats */}
-					<Stats loading={loading} stats={stats} role="region" aria-label="user stats" />
+					<Stats
+						loading={loading}
+						stats={stats}
+						role="region"
+						aria-label="User statistics"
+					/>
 				</div>
 
 				{/* Links */}
-				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+				<nav
+					className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6"
+					aria-label="Quick navigation">
 					<Link
 						to={'/collections'}
 						className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition text-left">
-						<div className="text-3xl mb-2">📁</div>
-						<h3 className="text-lg font-semibold text-gray-900 mb-1">
+						<span className="text-3xl mb-2" aria-hidden="true">
+							📚
+						</span>
+						<h2 className="text-lg font-semibold text-gray-900 mb-1">
 							My Collections
-						</h3>
+						</h2>
 						<p className="text-sm text-gray-600">
 							View and manage your game collections
 						</p>
@@ -162,21 +173,23 @@ export const ProfilePage = () => {
 					<Link
 						to={'/browse'}
 						className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition text-left">
-						<span className="text-3xl mb-2">🔍</span>
-						<h3 className="text-lg font-semibold text-gray-900 mb-1">
+						<span className="text-3xl mb-2" aria-hidden="true">
+							🔍
+						</span>
+						<h2 className="text-lg font-semibold text-gray-900 mb-1">
 							Browse Games
-						</h3>
+						</h2>
 						<p className="text-sm text-gray-600">
 							Discover new games to add to your collection
 						</p>
 					</Link>
-				</div>
+				</nav>
 
 				{/* Actions */}
-				<div>
-					<h3 className="text-lg font-semibold text-gray-900 mb-4">
+				<section>
+					<h2 className="text-lg font-semibold text-gray-900 mb-4">
 						Account Actions
-					</h3>
+					</h2>
 					<div className="grid grid-cols-2 gap-4">
 						<Link
 							to={'/settings'}
@@ -185,7 +198,8 @@ export const ProfilePage = () => {
 								className="w-5 h-5"
 								fill="none"
 								stroke="currentColor"
-								viewBox="0 0 24 24">
+								viewBox="0 0 24 24"
+								aria-hidden="true">
 								<path
 									strokeLinecap="round"
 									strokeLinejoin="round"
@@ -209,7 +223,8 @@ export const ProfilePage = () => {
 								className="w-5 h-5"
 								fill="none"
 								stroke="currentColor"
-								viewBox="0 0 24 24">
+								viewBox="0 0 24 24"
+								aria-hidden="true">
 								<path
 									strokeLinecap="round"
 									strokeLinejoin="round"
@@ -219,8 +234,8 @@ export const ProfilePage = () => {
 							</svg>
 						</button>
 					</div>
-				</div>
-			</div>
+				</section>
+			</main>
 		</div>
 	);
 };

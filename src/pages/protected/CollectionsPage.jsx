@@ -91,30 +91,34 @@ export const CollectionsPage = () => {
 
 	return (
 		<div className="min-h-screen bg-gray-100">
-			<div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
-				<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+			<main className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
+				<header className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
 					<h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
 						My Collections
 					</h1>
 					<button
 						onClick={() => setShowModal(true)}
-						className="w-full sm:w-auto px-6 py-2.5 bg-teal-500 text-white font-medium rounded-lg hover:bg-teal-600 transition">
+						className="cursor-pointer w-full sm:w-auto px-6 py-2.5 bg-teal-500 text-white font-medium rounded-lg hover:bg-teal-600 transition">
 						Create Collection
 					</button>
-				</div>
+				</header>
 
 				{error && (
-					<div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+					<div
+						role="alert"
+						className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
 						{error}
 					</div>
 				)}
 
 				{loading ? (
 					<div className="text-center py-12">
-						<div className="text-gray-500">Loading collections...</div>
+						<p className="text-gray-500" role="status">
+							Loading collections...
+						</p>
 					</div>
 				) : collections.length === 0 ? (
-					<div className="bg-white rounded-xl shadow-sm p-12 text-center">
+					<section className="bg-white rounded-xl shadow-sm p-12 text-center">
 						<div className="text-gray-400 mb-4">
 							<p className="text-lg">No collections yet</p>
 							<p className="text-sm mt-2">
@@ -123,74 +127,84 @@ export const CollectionsPage = () => {
 						</div>
 						<button
 							onClick={() => setShowModal(true)}
-							className="px-6 py-2.5 bg-teal-500 text-white font-medium rounded-lg hover:bg-teal-600 transition">
+							className="cursor-pointer px-6 py-2.5 bg-teal-500 text-white font-medium rounded-lg hover:bg-teal-600 transition">
 							Create Your First Collection
 						</button>
-					</div>
+					</section>
 				) : (
-					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
-						{collections.map((col) => (
-							<div
-								key={col.id}
-								className="relative bg-white rounded-xl shadow-sm p-5 hover:shadow-md transition">
-								{/* Card body */}
-								<div
-									onClick={() => navigate(`/collections/${col.id}`)}
-									className="cursor-pointer">
-									<div className="flex items-start justify-between mb-3">
-										<h3 className="text-lg font-semibold text-gray-900 flex-1 pr-2 whitespace-pre-line wrap-break-word line-clamp-3">
-											{col.name}
-										</h3>
-									</div>
+					<section aria-label="Collections list">
+						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
+							{collections.map((col) => (
+								<article
+									key={col.id}
+									className="relative bg-white rounded-xl shadow-sm p-5 hover:shadow-md transition">
+									{/* Card body */}
+									<div
+										onClick={() => navigate(`/collections/${col.id}`)}
+										className="cursor-pointer">
+										<header className="flex items-start justify-between mb-3">
+											<h2 className="text-lg font-semibold text-gray-900 flex-1 pr-2 whitespace-pre-line wrap-break-word line-clamp-3">
+												{col.name}
+											</h2>
+										</header>
 
-									{col.description && (
-										<p className="text-gray-600 text-sm mb-3 whitespace-pre-line wrap-break-word line-clamp-3">
-											{col.description}
+										{col.description && (
+											<p className="text-gray-600 text-sm mb-3 whitespace-pre-line wrap-break-word line-clamp-3">
+												{col.description}
+											</p>
+										)}
+
+										<p className="text-xs text-gray-400">
+											Created {formatDate(col.createdAt)}
 										</p>
-									)}
-
-									<div className="text-xs text-gray-400">
-										Created {formatDate(col.createdAt)}
 									</div>
-								</div>
 
-								{/* Delete btn */}
-								<button
-									onClick={() => {
-										handleDeleteCollection(col.id);
-									}}
-									className="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition p-1 text-lg"
-									title="Delete collection">
-									×
-								</button>
-							</div>
-						))}
-					</div>
+									{/* Delete btn */}
+									<button
+										onClick={() => {
+											handleDeleteCollection(col.id);
+										}}
+										aria-label={`Delete ${col.name} collection`}
+										className="cursor-pointer absolute top-3 right-3 text-gray-400 hover:text-red-500 transition p-1 text-lg"
+										title="Delete collection">
+										×
+									</button>
+								</article>
+							))}
+						</div>
+					</section>
 				)}
-			</div>
-
+			</main>
 			{/* Modal */}
 			{showModal && (
 				// TODO: Make this a component.
-				<div className="fixed inset-0 bg-gray-100 z-50 flex items-center justify-center p-4">
+				<div
+					className="fixed inset-0 bg-gray-100 z-50 flex items-center justify-center p-4"
+					role="dialog"
+					aria-modal="true"
+					aria-labelledby="modal-title">
 					<div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
-						<div className="flex items-center justify-between mb-4">
-							<h2 className="text-xl font-bold text-gray-900">
+						<header className="flex items-center justify-between mb-4">
+							<h2 id="modal-title" className="text-xl font-bold text-gray-900">
 								Create New Collection
 							</h2>
 							<button
 								onClick={() => setShowModal(false)}
-								className="text-gray-400 hover:text-gray-600 text-2xl leading-none">
+								aria-label="Close dialog"
+								className="cursor-pointer text-gray-400 hover:text-gray-600 text-2xl leading-none">
 								×
 							</button>
-						</div>
+						</header>
 
 						<form onSubmit={handleCreateCollection}>
 							<div className="mb-4">
-								<label className="block text-sm font-medium text-gray-700 mb-2">
+								<label
+									htmlFor="collection-name"
+									className="block text-sm font-medium text-gray-700 mb-2">
 									Collection Name *
 								</label>
 								<input
+									id="collection-name"
 									type="text"
 									value={formData.name}
 									onChange={(e) =>
@@ -204,10 +218,13 @@ export const CollectionsPage = () => {
 							</div>
 
 							<div className="mb-6">
-								<label className="block text-sm font-medium text-gray-700 mb-2">
+								<label
+									htmlFor="collection-description"
+									className="block text-sm font-medium text-gray-700 mb-2">
 									Description (optional)
 								</label>
 								<textarea
+									id="collection-description"
 									value={formData.description}
 									onChange={(e) =>
 										setFormData({ ...formData, description: e.target.value })
@@ -223,13 +240,14 @@ export const CollectionsPage = () => {
 								<button
 									type="button"
 									onClick={() => setShowModal(false)}
-									className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
+									className="cursor-pointer flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition">
 									Cancel
 								</button>
 								<button
 									type="submit"
 									disabled={submitting || !formData.name.trim()}
-									className="flex-1 px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition">
+									aria-busy={submitting}
+									className="cursor-pointer flex-1 px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition">
 									{submitting ? 'Creating...' : 'Create'}
 								</button>
 							</div>

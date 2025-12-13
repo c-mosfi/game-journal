@@ -66,38 +66,54 @@ export const JournalEditor = ({ onSave, onCancel, initialData = null }) => {
 
 	return (
 		<div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-			<form onSubmit={handleSubmit}>
+			<form
+				onSubmit={handleSubmit}
+				aria-label={
+					initialData ? 'Edit journal entry' : 'Create journal entry'
+				}>
 				{/* Text */}
 				<div className="mb-4">
+					<label htmlFor="journal-text" className="sr-only">
+						Journal entry text
+					</label>
 					<textarea
+						id="journal-text"
 						value={text}
 						onChange={(e) => setText(e.target.value)}
 						placeholder="Write your journal entry..."
+						aria-describedby="char-count"
+						aria-invalid={isOverLimit}
 						className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none ${
 							isOverLimit ? 'border-red-500' : 'border-gray-300'
 						}`}
 						rows={6}
 					/>
 					<div
+						id="char-count"
 						className={`text-sm text-right mt-1 ${
 							isOverLimit ? 'text-red-500' : 'text-gray-500'
-						}`}>
+						}`}
+						role={isOverLimit ? 'alert' : 'status'}>
 						{remainingChars} characters remaining
 					</div>
 				</div>
 
 				{/* Tags */}
-				<div className="mb-4">
-					<label className="block text-sm font-medium text-gray-700 mb-2">
+				<fieldset className="mb-4">
+					<legend className="block text-sm font-medium text-gray-700 mb-2">
 						Tag (optional)
-					</label>
-					<div className="flex flex-wrap gap-2">
+					</legend>
+					<div
+						className="flex flex-wrap gap-2"
+						role="group"
+						aria-label="Tag options">
 						{TAG_OPTIONS.map((option) => (
 							<button
 								key={option.value}
 								type="button"
 								onClick={() => setTag(option.value)}
-								className={`px-3 py-1.5 rounded-full text-sm font-medium transition ${
+								aria-pressed={tag === option.value}
+								className={`cursor-pointer px-3 py-1.5 rounded-full text-sm font-medium transition ${
 									tag === option.value
 										? option.color + ' ring-2 ring-offset-2 ring-teal-500'
 										: 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -106,20 +122,25 @@ export const JournalEditor = ({ onSave, onCancel, initialData = null }) => {
 							</button>
 						))}
 					</div>
-				</div>
+				</fieldset>
 
 				{/* Mood  */}
-				<div className="mb-6">
-					<label className="block text-sm font-medium text-gray-700 mb-2">
+				<fieldset className="mb-6">
+					<legend className="block text-sm font-medium text-gray-700 mb-2">
 						Mood (optional)
-					</label>
-					<div className="flex flex-wrap gap-2">
+					</legend>
+					<div
+						className="flex flex-wrap gap-2"
+						role="group"
+						aria-label="Mood options">
 						{MOOD_OPTIONS.map((emoji) => (
 							<button
 								key={emoji}
 								type="button"
 								onClick={() => setMood(mood === emoji ? '' : emoji)}
-								className={`w-10 h-10 text-2xl rounded-lg transition ${
+								aria-label={`Mood: ${emoji}`}
+								aria-pressed={mood === emoji}
+								className={`cursor-pointer w-10 h-10 text-2xl rounded-lg transition ${
 									mood === emoji
 										? 'bg-teal-100 ring-2 ring-teal-500'
 										: 'bg-gray-100 hover:bg-gray-200'
@@ -131,12 +152,13 @@ export const JournalEditor = ({ onSave, onCancel, initialData = null }) => {
 							<button
 								type="button"
 								onClick={() => setMood('')}
-								className="w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 text-sm">
+								aria-label="Clear mood"
+								className="cursor-pointer w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 text-sm">
 								Clear
 							</button>
 						)}
 					</div>
-				</div>
+				</fieldset>
 
 				{/* Actions */}
 				<div className="flex gap-3">
@@ -144,13 +166,14 @@ export const JournalEditor = ({ onSave, onCancel, initialData = null }) => {
 						type="button"
 						onClick={onCancel}
 						disabled={saving}
-						className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition disabled:opacity-50">
+						className="cursor-pointer flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition disabled:opacity-50">
 						Cancel
 					</button>
 					<button
 						type="submit"
 						disabled={saving || !text.trim() || isOverLimit}
-						className="flex-1 px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition disabled:bg-gray-300 disabled:cursor-not-allowed">
+						aria-busy={saving}
+						className="cursor-pointer flex-1 px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition disabled:bg-gray-300 disabled:cursor-not-allowed">
 						{saving ? 'Saving...' : initialData ? 'Update Entry' : 'Save Entry'}
 					</button>
 				</div>

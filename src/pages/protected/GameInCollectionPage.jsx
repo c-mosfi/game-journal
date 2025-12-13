@@ -189,7 +189,9 @@ export const GameInCollectionPage = () => {
 	if (loading) {
 		return (
 			<div className="min-h-screen bg-gray-100 flex items-center justify-center">
-				<div className="text-gray-500">Loading...</div>
+				<p className="text-gray-500" role="status">
+					Loading...
+				</p>
 			</div>
 		);
 	}
@@ -198,12 +200,14 @@ export const GameInCollectionPage = () => {
 		return (
 			<div className="min-h-screen bg-gray-100">
 				<div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
-					<div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
+					<div
+						role="alert"
+						className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
 						{error || 'Game not found'}
 					</div>
 					<button
 						onClick={() => navigate(`/collections/${collectionId}`)}
-						className="mt-4 text-teal-600 hover:text-teal-700 font-medium">
+						className="cursor-pointer mt-4 text-teal-600 hover:text-teal-700 font-medium">
 						← Back to Collection
 					</button>
 				</div>
@@ -213,24 +217,28 @@ export const GameInCollectionPage = () => {
 
 	return (
 		<div className="min-h-screen bg-gray-100">
-			<div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
+			<main className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
 				{/* Back btn */}
-				<button
-					onClick={() => navigate(`/collections/${collectionId}`)}
-					className="text-teal-600 hover:text-teal-700 font-medium mb-4 inline-flex items-center">
-					← Back to Collection
-				</button>
+				<nav>
+					<button
+						onClick={() => navigate(`/collections/${collectionId}`)}
+						className="cursor-pointer text-teal-600 hover:text-teal-700 font-medium mb-4 inline-flex items-center">
+						← Back to Collection
+					</button>
+				</nav>
 
 				<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 					{/* Left grid: Game info */}
-					<div className="lg:col-span-1 space-y-6">
+					<aside className="lg:col-span-1 space-y-6">
 						{/* Game card */}
 						{/* TODO: Make this a component. Then use this game card for all other game cards (browse results, collection detail ) */}
-						<div className="bg-white rounded-xl shadow-sm overflow-hidden">
+						<article className="bg-white rounded-xl shadow-sm overflow-hidden">
 							{game.coverUrl && (
 								<div
 									className="h-48 bg-cover bg-center"
 									style={{ backgroundImage: `url(${game.coverUrl})` }}
+									role="img"
+									aria-label={`${game.title} cover`}
 								/>
 							)}
 							<div className="p-4">
@@ -240,10 +248,10 @@ export const GameInCollectionPage = () => {
 
 								{/* Genres */}
 								{game.genre && game.genre.length > 0 && (
-									<div className="mb-3">
-										<p className="text-sm font-semibold text-gray-600 mb-1">
+									<section className="mb-3">
+										<h2 className="text-sm font-semibold text-gray-600 mb-1">
 											Genres
-										</p>
+										</h2>
 										<div className="flex flex-wrap gap-1">
 											{game.genre.slice(0, 3).map((g, idx) => (
 												<span
@@ -253,142 +261,175 @@ export const GameInCollectionPage = () => {
 												</span>
 											))}
 										</div>
-									</div>
+									</section>
 								)}
 
 								{/* Platforms */}
 								{game.platform && game.platform.length > 0 && (
-									<div className="mb-3">
-										<p className="text-sm font-semibold text-gray-600 mb-1">
+									<section className="mb-3">
+										<h2 className="text-sm font-semibold text-gray-600 mb-1">
 											Available On
-										</p>
+										</h2>
 										<p className="text-sm text-gray-700">
 											{game.platform.slice(0, 3).join(', ')}
 										</p>
-									</div>
+									</section>
 								)}
 
 								{/* API Rating */}
 								{game.ratingAPI && (
 									<div className="flex items-center text-sm">
-										<span className="text-yellow-500 mr-1">★</span>
+										<span className="text-yellow-500 mr-1" aria-hidden="true">
+											★
+										</span>
 										<span className="font-medium">{game.ratingAPI}</span>
 										<span className="text-gray-500 ml-1">API Rating</span>
 									</div>
 								)}
 							</div>
-						</div>
+						</article>
 
 						{/* Metadata card: input data from the user */}
-						<div className="bg-white rounded-xl shadow-sm p-4">
-							<h2 className="text-lg font-semibold text-gray-900 mb-4">
+						<section
+							className="bg-white rounded-xl shadow-sm p-4"
+							aria-labelledby="game-progress-heading">
+							<h2
+								id="game-progress-heading"
+								className="text-lg font-semibold text-gray-900 mb-4">
 								Game Progress
 							</h2>
 
-							{/* Status */}
-							<div className="mb-4">
-								<label className="block text-sm font-medium text-gray-700 mb-2">
-									Status
-								</label>
-								<select
-									value={status}
-									onChange={(e) => setStatus(e.target.value)}
-									className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500">
-									{STATUS_OPTIONS.map((opt) => (
-										<option key={opt.value} value={opt.value}>
-											{opt.value}
-										</option>
-									))}
-								</select>
-							</div>
-
-							{/* Personal rating */}
-							<div className="mb-4">
-								<label className="block text-sm font-medium text-gray-700 mb-2">
-									Your Rating
-								</label>
-								<div className="flex gap-1">
-									{[1, 2, 3, 4, 5].map((star) => (
-										<button
-											key={star}
-											type="button"
-											onClick={() => setPersonalRating(star)}
-											className="text-2xl transition">
-											<span
-												className={
-													star <= personalRating
-														? 'text-yellow-400'
-														: 'text-gray-300'
-												}>
-												★
-											</span>
-										</button>
-									))}
+							<form
+								onSubmit={(e) => {
+									e.preventDefault();
+									handleUpdateMetadata();
+								}}>
+								{/* Status */}
+								<div className="mb-4">
+									<label
+										htmlFor="game-status"
+										className="block text-sm font-medium text-gray-700 mb-2">
+										Status
+									</label>
+									<select
+										id="game-status"
+										value={status}
+										onChange={(e) => setStatus(e.target.value)}
+										className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500">
+										{STATUS_OPTIONS.map((opt) => (
+											<option key={opt.value} value={opt.value}>
+												{opt.value}
+											</option>
+										))}
+									</select>
 								</div>
-							</div>
 
-							{/* Hours */}
-							<div className="mb-4">
-								<label className="block text-sm font-medium text-gray-700 mb-2">
-									Hours Played
-								</label>
-								<input
-									type="number"
-									value={hoursPlayed}
-									onChange={(e) => setHoursPlayed(e.target.value)}
-									min="0"
-									step="0.5"
-									placeholder="12.5"
-									className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500"
-								/>
-							</div>
+								{/* Personal rating */}
+								<fieldset className="mb-4">
+									<legend className="block text-sm font-medium text-gray-700 mb-2">
+										Your Rating
+									</legend>
+									<div
+										className="flex gap-1"
+										role="group"
+										aria-label="Rate game from 1 to 5 stars">
+										{[1, 2, 3, 4, 5].map((star) => (
+											<button
+												key={star}
+												type="button"
+												onClick={() => setPersonalRating(star)}
+												aria-label={`${star} star${star !== 1 ? 's' : ''}`}
+												aria-pressed={star === personalRating}
+												className="cursor-pointer text-2xl transition">
+												<span
+													className={
+														star <= personalRating
+															? 'text-yellow-400'
+															: 'text-gray-300'
+													}>
+													★
+												</span>
+											</button>
+										))}
+									</div>
+								</fieldset>
 
-							{/* Start date */}
-							<div className="mb-4">
-								<label className="block text-sm font-medium text-gray-700 mb-2">
-									Started Playing
-								</label>
-								<input
-									type="date"
-									value={startDate}
-									onChange={(e) => setStartDate(e.target.value)}
-									className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500"
-								/>
-							</div>
+								{/* Hours */}
+								<div className="mb-4">
+									<label
+										htmlFor="hours-played"
+										className="block text-sm font-medium text-gray-700 mb-2">
+										Hours Played
+									</label>
+									<input
+										id="hours-played"
+										type="number"
+										value={hoursPlayed}
+										onChange={(e) => setHoursPlayed(e.target.value)}
+										min="0"
+										step="0.5"
+										placeholder="12.5"
+										className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500"
+									/>
+								</div>
 
-							{/* Completion date */}
-							<div className="mb-4">
-								<label className="block text-sm font-medium text-gray-700 mb-2">
-									Completion Date
-								</label>
-								<input
-									type="date"
-									value={completionDate}
-									onChange={(e) => setCompletionDate(e.target.value)}
-									className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500"
-								/>
-							</div>
+								{/* Start date */}
+								<div className="mb-4">
+									<label
+										htmlFor="start-date"
+										className="block text-sm font-medium text-gray-700 mb-2">
+										Started Playing
+									</label>
+									<input
+										id="start-date"
+										type="date"
+										value={startDate}
+										onChange={(e) => setStartDate(e.target.value)}
+										className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500"
+									/>
+								</div>
 
-							<button
-								onClick={handleUpdateMetadata}
-								className="w-full px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition">
-								Save Changes
-							</button>
-						</div>
+								{/* Completion date */}
+								<div className="mb-4">
+									<label
+										htmlFor="completion-date"
+										className="block text-sm font-medium text-gray-700 mb-2">
+										Completion Date
+									</label>
+									<input
+										id="completion-date"
+										type="date"
+										value={completionDate}
+										onChange={(e) => setCompletionDate(e.target.value)}
+										className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500"
+									/>
+								</div>
+
+								<button
+									type="submit"
+									className="cursor-pointer w-full px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition">
+									Save Changes
+								</button>
+							</form>
+						</section>
 
 						{/* Remove btn */}
 						<button
 							onClick={handleRemoveFromCollection}
-							className="w-full px-4 py-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition">
+							className="cursor-pointer w-full px-4 py-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition">
 							Remove Game from Collection
 						</button>
-					</div>
+					</aside>
 
 					{/* Right grid: Journal timeline */}
 					{/* TODO: Make this a component */}
-					<div className="lg:col-span-2">
-						<div className="flex items-center justify-between mb-4">
-							<h2 className="text-2xl font-bold text-gray-900">
+					<section
+						className="lg:col-span-2"
+						aria-labelledby="journal-timeline-heading">
+						<header className="flex items-center justify-between mb-4">
+							<h2
+								id="journal-timeline-heading"
+								className="text-2xl font-bold text-gray-900">
 								Journal Timeline
 							</h2>
 							<button
@@ -396,10 +437,10 @@ export const GameInCollectionPage = () => {
 									setEditingEntry(null);
 									setShowEditor(true);
 								}}
-								className="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition">
+								className="cursor-pointer px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition">
 								Add Entry
 							</button>
-						</div>
+						</header>
 
 						{/* Editor */}
 						{showEditor && (
@@ -421,23 +462,28 @@ export const GameInCollectionPage = () => {
 								<p className="text-gray-500 mb-4">No journal entries yet</p>
 								<button
 									onClick={() => setShowEditor(true)}
-									className="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition">
+									className="cursor-pointer px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition">
 									Write Your First Entry
 								</button>
 							</div>
 						) : (
 							<div className="space-y-4">
 								{journalEntries.map((entry) => (
-									<div
+									<article
 										key={entry.id}
 										className="bg-white rounded-lg shadow-sm p-4 border border-gray-200">
-										<div className="flex items-start justify-between mb-2">
+										<header className="flex items-start justify-between mb-2">
 											<div className="flex items-center gap-2">
-												<span className="text-sm text-gray-500">
+												<time className="text-sm text-gray-500">
 													{formatDate(entry.createdAt)}
-												</span>
+												</time>
 												{entry.mood && (
-													<span className="text-xl">{entry.mood}</span>
+													<span
+														className="text-xl"
+														role="img"
+														aria-label={`Mood: ${entry.mood}`}>
+														{entry.mood}
+													</span>
 												)}
 											</div>
 											<div className="flex gap-2">
@@ -446,12 +492,14 @@ export const GameInCollectionPage = () => {
 														setEditingEntry(entry);
 														setShowEditor(true);
 													}}
-													className="text-gray-400 hover:text-teal-600 p-1">
+													aria-label="Edit entry"
+													className="cursor-pointer text-gray-400 hover:text-teal-600 p-1">
 													<svg
 														className="w-4 h-4"
 														fill="none"
 														stroke="currentColor"
-														viewBox="0 0 24 24">
+														viewBox="0 0 24 24"
+														aria-hidden="true">
 														<path
 															strokeLinecap="round"
 															strokeLinejoin="round"
@@ -462,12 +510,14 @@ export const GameInCollectionPage = () => {
 												</button>
 												<button
 													onClick={() => handleDeleteEntry(entry.id)}
-													className="text-gray-400 hover:text-red-600 p-1">
+													aria-label="Delete entry"
+													className="cursor-pointer text-gray-400 hover:text-red-600 p-1">
 													<svg
 														className="w-4 h-4"
 														fill="none"
 														stroke="currentColor"
-														viewBox="0 0 24 24">
+														viewBox="0 0 24 24"
+														aria-hidden="true">
 														<path
 															strokeLinecap="round"
 															strokeLinejoin="round"
@@ -477,7 +527,7 @@ export const GameInCollectionPage = () => {
 													</svg>
 												</button>
 											</div>
-										</div>
+										</header>
 
 										{entry.tag && entry.tag !== 'none' && (
 											<div className="mb-2">
@@ -500,20 +550,21 @@ export const GameInCollectionPage = () => {
 											{entry.text.length > 150 && (
 												<button
 													onClick={() => toggleExpanded(entry.id)}
-													className="text-teal-600 hover:text-teal-700 text-sm mt-2 font-medium">
+													aria-expanded={expandedEntries.has(entry.id)}
+													className="cursor-pointer text-teal-600 hover:text-teal-700 text-sm mt-2 font-medium">
 													{expandedEntries.has(entry.id)
 														? 'Show less'
 														: 'See more'}
 												</button>
 											)}
 										</div>
-									</div>
+									</article>
 								))}
 							</div>
 						)}
-					</div>
+					</section>
 				</div>
-			</div>
+			</main>
 		</div>
 	);
 };

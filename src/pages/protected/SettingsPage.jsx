@@ -109,19 +109,23 @@ export const SettingsPage = () => {
 
 	return (
 		<div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
-			<div className="max-w-2xl w-full bg-white p-8 rounded-lg shadow-lg">
-				<div className="text-center mb-10">
+			<main className="max-w-2xl w-full bg-white p-8 rounded-lg shadow-lg">
+				<header className="text-center mb-10">
 					<h1 className="text-3xl font-bold text-gray-900 mb-2">
 						Account Settings
 					</h1>
 					<p className="text-gray-600 text-sm">
 						Manage your account details and preferences
 					</p>
-				</div>
+				</header>
 
 				{/* Username */}
-				<section className="mb-10 pb-8 border-b border-gray-200">
-					<h2 className="text-xl font-semibold text-gray-800 mb-4">
+				<section
+					className="mb-10 pb-8 border-b border-gray-200"
+					aria-labelledby="username-heading">
+					<h2
+						id="username-heading"
+						className="text-xl font-semibold text-gray-800 mb-4">
 						Change Username
 					</h2>
 
@@ -134,23 +138,33 @@ export const SettingsPage = () => {
 						</p>
 
 						{usernameError && (
-							<div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+							<div
+								role="alert"
+								className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
 								<p className="text-sm font-medium">{usernameError}</p>
 							</div>
 						)}
 
 						{usernameSuccess && (
-							<div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-4">
+							<div
+								role="status"
+								className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-4">
 								<p className="text-sm font-medium">{usernameSuccess}</p>
 							</div>
 						)}
 
-						<form onSubmit={handleUsername} className="space-y-4">
+						<form
+							onSubmit={handleUsername}
+							className="space-y-4"
+							aria-label="Change username form">
 							<div>
-								<label className="block text-sm font-medium text-gray-700 mb-2">
+								<label
+									htmlFor="new-username"
+									className="block text-sm font-medium text-gray-700 mb-2">
 									New username
 								</label>
 								<input
+									id="new-username"
 									type="text"
 									value={newUsername}
 									onChange={(e) => setNewUsername(e.target.value)}
@@ -161,8 +175,9 @@ export const SettingsPage = () => {
 
 							<button
 								type="submit"
-								disabled={loadingUsername || !newUsername.trim()}
-								className="w-full bg-teal-600 text-white py-3 rounded-lg font-medium hover:bg-teal-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition">
+								disable={loadingUsername || !newUsername.trim()}
+								aria-busy={loadingUsername}
+								className="cursor-pointer w-full bg-teal-600 text-white py-3 rounded-lg font-medium hover:bg-teal-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition">
 								{loadingUsername ? 'Updating...' : 'Update Username'}
 							</button>
 						</form>
@@ -170,8 +185,12 @@ export const SettingsPage = () => {
 				</section>
 
 				{/* Email */}
-				<section className="mb-10 pb-8 border-b border-gray-200">
-					<h2 className="text-xl font-semibold text-gray-800 mb-4">
+				<section
+					className="mb-10 pb-8 border-b border-gray-200"
+					aria-labelledby="email-heading">
+					<h2
+						id="email-heading"
+						className="text-xl font-semibold text-gray-800 mb-4">
 						Change Email
 					</h2>
 
@@ -187,43 +206,61 @@ export const SettingsPage = () => {
 						</p>
 
 						{emailError && (
-							<div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+							<div
+								role="alert"
+								className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
 								<p className="text-sm font-medium">{emailError}</p>
 							</div>
 						)}
 
 						{emailSuccess && (
-							<div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-4">
+							<div
+								role="status"
+								className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-4">
 								<p className="text-sm font-medium">{emailSuccess}</p>
 							</div>
 						)}
 
-						<form onSubmit={handleEmailChange} className="space-y-4">
+						<form
+							onSubmit={handleEmailChange}
+							className="space-y-4"
+							aria-label="Change email form">
 							<div>
-								<label className="block text-sm font-medium text-gray-700 mb-2">
+								<label
+									htmlFor="new-email"
+									className="block text-sm font-medium text-gray-700 mb-2">
 									New email
 								</label>
 								<input
+									id="new-email"
 									type="email"
 									value={newEmail}
 									onChange={(e) => setNewEmail(e.target.value)}
+									autoComplete="email"
 									className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
 									placeholder="Enter a new email"
 								/>
 							</div>
 
 							<div>
-								<label className="block text-sm font-medium text-gray-700 mb-2">
+								<label
+									htmlFor="email-password"
+									className="block text-sm font-medium text-gray-700 mb-2">
 									Current password
 								</label>
 								<input
+									id="email-password"
 									type="password"
 									value={emailPassword}
 									onChange={(e) => setEmailPassword(e.target.value)}
+									autoComplete="current-password"
+									aria-describedby="email-password-hint"
 									className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
 									placeholder="Confirm your identity"
 								/>
-								<p className="text-xs text-gray-500 mt-1">
+								<p
+									id="email-password-hint"
+									className="text-xs text-gray-500 mt-1">
 									Required for security verification
 								</p>
 							</div>
@@ -233,7 +270,8 @@ export const SettingsPage = () => {
 								disabled={
 									loadingEmail || !newEmail.trim() || !emailPassword.trim()
 								}
-								className="w-full bg-teal-600 text-white py-3 rounded-lg font-medium hover:bg-teal-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition">
+								aria-busy={loadingEmail}
+								className="cursor-pointer w-full bg-teal-600 text-white py-3 rounded-lg font-medium hover:bg-teal-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition">
 								{loadingEmail ? 'Updating...' : 'Change Email'}
 							</button>
 						</form>
@@ -242,7 +280,7 @@ export const SettingsPage = () => {
 							<div className="mt-4 pt-4 border-t border-gray-200">
 								<button
 									onClick={resendVerification}
-									className="text-sm text-teal-600 hover:text-teal-700 font-medium hover:underline">
+									className="cursor-pointer text-sm text-teal-600 hover:text-teal-700 font-medium hover:underline">
 									Resend verification email
 								</button>
 							</div>
@@ -251,8 +289,12 @@ export const SettingsPage = () => {
 				</section>
 
 				{/* Delete account */}
-				<section className="rounded-lg p-6 bg-red-50 border border-red-200">
-					<h2 className="text-xl font-semibold text-red-700 mb-3">
+				<section
+					className="rounded-lg p-6 bg-red-50 border border-red-200"
+					aria-labelledby="danger-heading">
+					<h2
+						id="danger-heading"
+						className="text-xl font-semibold text-red-700 mb-3">
 						Danger Zone
 					</h2>
 
@@ -261,7 +303,9 @@ export const SettingsPage = () => {
 					</p>
 
 					{deleteError && (
-						<div className="bg-red-100 text-red-800 border border-red-300 px-4 py-3 rounded-lg mb-4">
+						<div
+							role="alert"
+							className="bg-red-100 text-red-800 border border-red-300 px-4 py-3 rounded-lg mb-4">
 							<p className="text-sm">{deleteError}</p>
 						</div>
 					)}
@@ -269,7 +313,7 @@ export const SettingsPage = () => {
 					{!showDeleteConfirm ? (
 						<button
 							onClick={() => setShowDeleteConfirm(true)}
-							className="w-full bg-red-600 text-white py-3 rounded-lg font-medium hover:bg-red-700 transition">
+							className="cursor-pointer w-full bg-red-600 text-white py-3 rounded-lg font-medium hover:bg-red-700 transition">
 							Proceed to Delete
 						</button>
 					) : (
@@ -278,7 +322,11 @@ export const SettingsPage = () => {
 								Type <span className="font-mono">DELETE</span> to confirm
 							</p>
 
+							<label htmlFor="delete-confirm" className="sr-only">
+								Type DELETE to confirm account deletion
+							</label>
 							<input
+								id="delete-confirm"
 								type="text"
 								value={deleteConfirmText}
 								onChange={(e) => setDeleteConfirmText(e.target.value)}
@@ -290,7 +338,8 @@ export const SettingsPage = () => {
 								<button
 									onClick={handleDeleteAccount}
 									disabled={loadingDelete || deleteConfirmText !== 'DELETE'}
-									className="flex-1 bg-red-600 text-white py-3 rounded-lg font-medium hover:bg-red-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition">
+									aria-busy={loadingDelete}
+									className="cursor-pointer flex-1 bg-red-600 text-white py-3 rounded-lg font-medium hover:bg-red-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition">
 									{loadingDelete ? 'Deleting...' : 'Delete Account'}
 								</button>
 
@@ -299,14 +348,14 @@ export const SettingsPage = () => {
 										setShowDeleteConfirm(false);
 										setDeleteConfirmText('');
 									}}
-									className="flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-300 transition">
+									className="cursor-pointer flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-300 transition">
 									Cancel
 								</button>
 							</div>
 						</div>
 					)}
 				</section>
-			</div>
+			</main>
 		</div>
 	);
 };

@@ -82,25 +82,30 @@ export const RegisterPage = () => {
 
 	return (
 		<div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
-			<div className="max-w-md w-full bg-white p-8 rounded-lg shadow-lg">
-				<div className="text-center mb-8">
+			<main className="max-w-md w-full bg-white p-8 rounded-lg shadow-lg">
+				<header className="text-center mb-8">
 					<h1 className="text-3xl font-bold text-gray-900 mb-2">
 						Create Account
 					</h1>
 					<p className="text-gray-600 text-sm">
 						Join GameJournal to track your gaming journey
 					</p>
-				</div>
+				</header>
 
 				{/* Error */}
 				{error && (
-					<div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+					<div
+						role="alert"
+						className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
 						<p className="text-sm font-medium">{error}</p>
 					</div>
 				)}
 
 				{/* Form */}
-				<form onSubmit={handleSubmit} className="space-y-5">
+				<form
+					onSubmit={handleSubmit}
+					className="space-y-5"
+					aria-label="Registration form">
 					{/* Name */}
 					<div>
 						<label
@@ -115,10 +120,15 @@ export const RegisterPage = () => {
 							value={formData.username}
 							onChange={handleChange}
 							required
-							autoComplete="name"
+							autoComplete="username"
+							aria-required="true"
+							aria-describedby="username-hint"
 							className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
 							placeholder="Enter a name"
 						/>
+						<p id="username-hint" className="text-xs text-gray-500 mt-1">
+							Between 2 and 12 characters
+						</p>
 					</div>
 
 					{/* Email */}
@@ -136,6 +146,7 @@ export const RegisterPage = () => {
 							onChange={handleChange}
 							required
 							autoComplete="email"
+							aria-required="true"
 							className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
 							placeholder="you@example.com"
 						/>
@@ -157,17 +168,21 @@ export const RegisterPage = () => {
 								onChange={handleChange}
 								required
 								autoComplete="new-password"
+								aria-required="true"
+								aria-describedby="password-hint"
 								className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
 								placeholder="At least 6 characters"
 							/>
 							<button
 								type="button"
 								onClick={() => setShowPassword(!showPassword)}
-								className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-600 hover:text-gray-800 font-medium">
+								aria-label={showPassword ? 'Hide password' : 'Show password'}
+								aria-pressed={showPassword}
+								className="cursor-pointer absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-600 hover:text-gray-800 font-medium">
 								{showPassword ? 'Hide' : 'Show'}
 							</button>
 						</div>
-						<p className="text-xs text-gray-500 mt-1">
+						<p id="password-hint" className="text-xs text-gray-500 mt-1">
 							Must be at least 6 characters long
 						</p>
 					</div>
@@ -188,13 +203,20 @@ export const RegisterPage = () => {
 								onChange={handleChange}
 								required
 								autoComplete="new-password"
+								aria-required="true"
 								className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
 								placeholder="Repeat your password"
 							/>
 							<button
 								type="button"
 								onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-								className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-600 hover:text-gray-800 font-medium">
+								aria-label={
+									showConfirmPassword
+										? 'Hide confirm password'
+										: 'Show confirm password'
+								}
+								aria-pressed={showConfirmPassword}
+								className="cursor-pointer absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-600 hover:text-gray-800 font-medium">
 								{showConfirmPassword ? 'Hide' : 'Show'}
 							</button>
 						</div>
@@ -204,13 +226,14 @@ export const RegisterPage = () => {
 					<button
 						type="submit"
 						disabled={loading || !isFormValid}
-						className="w-full bg-teal-600 text-white py-3 rounded-lg font-medium hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 disabled:bg-gray-300 disabled:cursor-not-allowed transition">
+						aria-busy={loading}
+						className="cursor-pointer w-full bg-teal-600 text-white py-3 rounded-lg font-medium hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 disabled:bg-gray-300 disabled:cursor-not-allowed transition">
 						{loading ? 'Creating Account...' : 'Create Account'}
 					</button>
 				</form>
 
 				{/* Divider */}
-				<div className="relative my-6">
+				<div className="relative my-6" aria-hidden="true">
 					<div className="absolute inset-0 flex items-center">
 						<div className="w-full border-t border-gray-300"></div>
 					</div>
@@ -229,7 +252,7 @@ export const RegisterPage = () => {
 						Log in instead
 					</Link>
 				</div>
-			</div>
+			</main>
 		</div>
 	);
 };

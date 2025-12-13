@@ -7,7 +7,7 @@ export const LandingPage = () => {
 	return (
 		<div className="min-h-screen bg-gray-100">
 			{/* Hero */}
-			<div className="bg-white shadow-sm">
+			<header className="bg-white shadow-sm">
 				<div className="max-w-4xl mx-auto px-4 py-16 sm:px-6 lg:px-8 text-center">
 					<h1 className="text-4xl font-bold text-gray-900 mb-4">
 						Your Personal Gaming Journal
@@ -15,7 +15,9 @@ export const LandingPage = () => {
 					<p className="text-lg text-gray-600 mb-8">
 						Track your games, document your journey
 					</p>
-					<div className="flex gap-4 justify-center">
+					<nav
+						className="flex gap-4 justify-center"
+						aria-label="Main navigation">
 						{isAuthenticated ? (
 							<>
 								<Link
@@ -43,27 +45,29 @@ export const LandingPage = () => {
 								</Link>
 							</>
 						)}
-					</div>
+					</nav>
 				</div>
-			</div>
+			</header>
 
 			{/* Features */}
-			<div className="max-w-6xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
-				<div className="text-center mb-12">
+			<main className="max-w-6xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
+				<header className="text-center mb-12">
 					<h2 className="text-3xl font-bold text-gray-900 mb-4">
 						Everything You Need
 					</h2>
 					<p className="text-lg text-gray-600">
-						A comprehensive platform to organize, track, and document your gaming
-						experiences
+						A comprehensive platform to organize, track, and document your
+						gaming experiences
 					</p>
-				</div>
+				</header>
 
 				{/* Feature cards */}
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 					{/* Collections */}
-					<div className="bg-white rounded-xl shadow-sm p-8 text-center hover:shadow-md transition">
-						<div className="w-16 h-16 bg-emerald-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+					<article className="bg-white rounded-xl shadow-sm p-8 text-center hover:shadow-md transition">
+						<div
+							className="w-16 h-16 bg-emerald-100 rounded-lg flex items-center justify-center mx-auto mb-4"
+							aria-hidden="true">
 							<svg
 								className="w-8 h-8 text-emerald-600"
 								fill="none"
@@ -81,14 +85,16 @@ export const LandingPage = () => {
 							Organize Collections
 						</h3>
 						<p className="text-gray-600">
-							Create custom collections to organize your games by genre, platform,
-							or any category you choose
+							Create custom collections to organize your games by genre,
+							platform, or any category you choose
 						</p>
-					</div>
+					</article>
 
 					{/* Journal */}
-					<div className="bg-white rounded-xl shadow-sm p-8 text-center hover:shadow-md transition">
-						<div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+					<article className="bg-white rounded-xl shadow-sm p-8 text-center hover:shadow-md transition">
+						<div
+							className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4"
+							aria-hidden="true">
 							<svg
 								className="w-8 h-8 text-blue-600"
 								fill="none"
@@ -109,11 +115,13 @@ export const LandingPage = () => {
 							Document your gaming experiences with detailed journal entries,
 							tags, and moods
 						</p>
-					</div>
+					</article>
 
 					{/* Progress */}
-					<div className="bg-white rounded-xl shadow-sm p-8 text-center hover:shadow-md transition">
-						<div className="w-16 h-16 bg-orange-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+					<article className="bg-white rounded-xl shadow-sm p-8 text-center hover:shadow-md transition">
+						<div
+							className="w-16 h-16 bg-orange-100 rounded-lg flex items-center justify-center mx-auto mb-4"
+							aria-hidden="true">
 							<svg
 								className="w-8 h-8 text-orange-600"
 								fill="none"
@@ -134,13 +142,13 @@ export const LandingPage = () => {
 							Monitor your gaming status, hours played, ratings, and completion
 							dates all in one place
 						</p>
-					</div>
+					</article>
 				</div>
-			</div>
+			</main>
 
 			{/* CTA Section */}
 			{!isAuthenticated && (
-				<div className="bg-teal-600 text-white">
+				<section className="bg-teal-600 text-white">
 					<div className="max-w-4xl mx-auto px-4 py-12 sm:px-6 lg:px-8 text-center">
 						<h2 className="text-3xl font-bold mb-4">
 							Ready to Start Your Gaming Journal?
@@ -154,7 +162,7 @@ export const LandingPage = () => {
 							Create Free Account
 						</Link>
 					</div>
-				</div>
+				</section>
 			)}
 		</div>
 	);

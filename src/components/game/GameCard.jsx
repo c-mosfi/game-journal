@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 export const GameCard = ({ game }) => {
 	const cover = game.background_image;
-	
+
 	return (
 		<Link
 			to={`/games/${game.id}`}
@@ -15,10 +15,14 @@ export const GameCard = ({ game }) => {
 						className="w-full h-full object-cover"
 					/>
 				) : (
-					<span className="text-gray-500 text-sm px-4 text-center">No cover available.</span>
+					<span className="text-gray-500 text-sm px-4 text-center">
+						No cover available.
+					</span>
 				)}
 			</div>
-			<h3 className="font-semibold text-gray-800 mb-2 text-sm sm:text-base line-clamp-2">{game.name}</h3>
+			<h1 className="font-semibold text-gray-800 mb-2 text-sm sm:text-base line-clamp-2">
+				{game.name}
+			</h1>
 			{/* Genres */}
 			<div className="flex flex-wrap gap-1 mb-2 mt-auto">
 				{game.genres?.slice(0, 2).map((g) => (
