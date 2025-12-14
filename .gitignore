@@ -65,3 +65,5 @@ lib-cov
 
 # Do-list:
 doList.md
+# Local Netlify folder
+.netlify

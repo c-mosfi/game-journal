@@ -1,5 +1,4 @@
-const API_KEY = import.meta.env.VITE_RAWG_API_KEY;
-const BASE_URL = 'https://api.rawg.io/api';
+const BASE_URL = '/.netlify/functions/rawg';
 
 // For BrowsePage.jsx
 export async function searchGames({
@@ -8,8 +7,8 @@ export async function searchGames({
 	platforms = '',
 	page = 1,
 }) {
-	const url = new URL(`${BASE_URL}/games`);
-	url.searchParams.append('key', API_KEY);
+	const url = new URL(BASE_URL, window.location.origin);
+	url.searchParams.append('endpoint', 'games');
 	url.searchParams.append('page', page);
 	url.searchParams.append('page_size', 20);
 
@@ -24,7 +23,10 @@ export async function searchGames({
 
 // For GameDetail.jsx
 export async function getGameDetails(id) {
-	const response = await fetch(`${BASE_URL}/games/${id}?key=${API_KEY}`);
+	const url = new URL(BASE_URL, window.location.origin);
+	url.searchParams.append('endpoint', `games/${id}`);
+
+	const response = await fetch(url);
 	if (!response.ok) throw new Error('Failed to fetch game details');
 	return response.json();
 }
