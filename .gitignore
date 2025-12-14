@@ -67,3 +67,4 @@ lib-cov
 doList.md
 # Local Netlify folder
 .netlify
+deno.lock
