@@ -1,5 +1,3 @@
-// TODO (MMP): Import signInWithPopup and GoogleAuthProvider for Google sign-in
-
 import {
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
